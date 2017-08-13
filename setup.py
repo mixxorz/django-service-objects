@@ -10,7 +10,7 @@ django-service-objects
 
 Service objects for Django
 
-`Go to GitHub for more info <https://github.com/mixxorz/django-service-objects/`_
+`Go to GitHub for more info <https://github.com/mixxorz/django-service-objects>`_
 """  # noqa
 
 
