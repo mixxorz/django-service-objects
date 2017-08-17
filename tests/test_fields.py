@@ -129,4 +129,5 @@ class MultipleModelFormFieldTest(TestCase):
 
         self.assertIn('[0]', cm.exception.message)
         self.assertIn('bar', cm.exception.message)
-        self.assertIn('Ensure this value has at most 5 characters', cm.exception.message)
+        self.assertIn('Ensure this value has at most 5 characters',
+                      cm.exception.message)
