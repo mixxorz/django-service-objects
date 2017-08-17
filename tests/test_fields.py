@@ -44,7 +44,7 @@ class MultipleFormFieldTest(TestCase):
             f.clean([])
 
         self.assertEqual(
-            'There needs to be at least 1 item/s.', cm.exception.message)
+            'There needs to be at least 1 item.', cm.exception.message)
 
     def test_max_count(self):
         f = MultipleFormField(FooForm, max_count=2)
@@ -59,4 +59,4 @@ class MultipleFormFieldTest(TestCase):
             }])
 
         self.assertEqual(
-            'There needs to be at most 2 item/s.', cm.exception.message)
+            'There needs to be at most 2 items.', cm.exception.message)
