@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.translation import ungettext_lazy
 
 
 class MultipleFormField(forms.Field):
@@ -26,6 +27,12 @@ class MultipleFormField(forms.Field):
             ]
         })
     """
+    error_min = ungettext_lazy("There needs to be at least %(num)d item.",
+                               "There needs to be at least %(num)d items.",
+                               'num')
+    error_max = ungettext_lazy("There needs to be at most %(num)d item.",
+                               "There needs to be at most %(num)d items.",
+                               'num')
 
     def __init__(self, form_class, min_count=1, max_count=None, *args,
                  **kwargs):
@@ -37,12 +44,10 @@ class MultipleFormField(forms.Field):
 
     def clean(self, values):
         if len(values) < self.min_count:
-            raise ValidationError(
-                'There needs to be at least {} item/s.'.format(self.min_count))
+            raise ValidationError(self.error_min % {'num': self.min_count})
 
         if self.max_count and len(values) > self.max_count:
-            raise ValidationError(
-                'There needs to be at most {} item/s.'.format(self.max_count))
+            raise ValidationError(self.error_max % {'num': self.max_count})
 
         item_forms = []
         for index, item in enumerate(values):
