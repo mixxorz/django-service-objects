@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Breno Uchôa <brenouchoa@gmail.com>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-17 00:57-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Breno Uchôa <brenouchoa@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: service_objects/fields.py:10
+#, python-format
+msgid "There needs to be at least %(num)d item."
+msgid_plural "There needs to be at least %(num)d items."
+msgstr[0] "É necessário pelo menos %(num)d item."
+msgstr[1] "São necessários pelo menos %(num)d itens."
+
+#: service_objects/fields.py:13
+#, python-format
+msgid "There needs to be at most %(num)d item."
+msgid_plural "There needs to be at most %(num)d items."
+msgstr[0] "Só pode conter %(num)d item."
+msgstr[1] "Só pode conter %(num)d itens."
