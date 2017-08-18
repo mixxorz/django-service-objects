@@ -74,11 +74,14 @@ You can use this service object anywhere. Here's an example of it being used in 
 ```python
 # your_app/views.py
 
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect, render
+from service_objects import views
 
 from .forms import BookingForm
 from .services import CreateBookingService
 
+# Function View
 def create_booking_view(request):
     form = BookingForm()
 
@@ -99,6 +102,15 @@ def create_booking_view(request):
                 form.add_error(None, f'Sorry. Something went wrong: {e}')
 
     return render(request, 'booking/create_booking.html', {'form': form})
+
+
+# Class Based View
+class CreateBookingView(views.ServiceView):
+    form_class = BookingForm
+    service_class = CreateBookingService
+    template_name = 'booking/create_booking.html'
+    success_url = reverse_lazy('booking:success')
+
 ```
 
 An example of testing CreateBookingService
