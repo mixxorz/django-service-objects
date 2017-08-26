@@ -1,4 +1,7 @@
+from six import with_metaclass
+
 from django import forms
+from django.forms import models
 from django.db import transaction
 
 from .errors import InvalidInputsError
@@ -46,3 +49,12 @@ class Service(forms.Form):
         functionality.
         """
         raise NotImplementedError()
+
+
+class ModelService(with_metaclass(models.ModelFormMetaclass, Service)):
+    """
+    Same as :class:`Service` but auto-creates fields based on the provided
+    :class:`Model`.  Additionally, You can manually create fields to override
+    or extend the auto-created fields
+    """
+    pass

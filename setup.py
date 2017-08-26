@@ -35,7 +35,7 @@ setup(
     author_email='mixxorz@gmail.com',
     maintainer='Mitchel Cabuloy',
     maintainer_email='mixxorz@gmail.com',
-    install_requires='Django>=1.8',
+    install_requires=['Django>=1.8', 'six'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Plugins',
