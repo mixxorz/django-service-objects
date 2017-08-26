@@ -5,7 +5,7 @@ class InvalidInputsError(Exception):
     entity.
 
     :param dictionary errors: :class:`Services`'s ``errors`` dictionary
-    
+
     :param dictionary non_field_errors: :class:`Service`'s
         ``non_field_errors`` dictionary
     """
