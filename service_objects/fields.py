@@ -4,7 +4,27 @@ from django.core.exceptions import ValidationError
 
 class MultipleFormField(forms.Field):
     """
-    A field that contains many forms, similar to a FormSet but easier to clean
+    A field for :class:`Service` that accepts a list of objects which is
+    translated into multiple :class:`Form` objects::
+
+        class PersonForm(forms.Form):
+            name = forms.CharField()
+
+
+        class UpdateOrganizationService(Service):
+            people = MultipleFormField(PersonForm)
+
+            def process(self):
+                people = self.cleaned_data['people']
+                for person in people:
+                    print(person.cleaned_data['name'])
+
+        UpdateOrganizationService.execute({
+            'people': [
+                { 'name': 'John Smith' },
+                { 'name': 'Adam Davis' },
+            ]
+        })
     """
 
     def __init__(self, form_class, min_count=1, max_count=None, *args,
