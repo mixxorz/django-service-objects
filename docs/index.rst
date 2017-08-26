@@ -11,8 +11,8 @@ Django Service Objects's documentation
    :caption: User Documentation
 
    pages/getting-started
+   pages/service_objects
    pages/examples
-   pages/objects
    pages/support
 
 
