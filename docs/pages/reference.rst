@@ -1,6 +1,5 @@
-
-Objects
-=======
+Object Reference
+================
 
 
 Errors module

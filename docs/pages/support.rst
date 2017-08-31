@@ -1,4 +1,3 @@
-
 Support
 =======
 
@@ -17,6 +16,7 @@ Contributing
 
 We welcome new functionality and bugfixes!  Everything should be submitted as a GitHub Pull Request.  If you want to be
 sure that the change will be accepted before starting then open a GitHub Issue to have a discussion.
+
 
 Pull Request Process
 ++++++++++++++++++++

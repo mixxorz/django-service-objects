@@ -3,7 +3,7 @@ from django.views.generic import FormView
 
 class ServiceView(FormView):
     """
-    Based on :mod:`Django`'s :class:`FormView`, designed to call a
+    Based on Django's :class:`FormView`, designed to call a
     :class:`Service` class if the Form is valid.  If :attr:`form_class` is
     ``None``, ServiceView will use :attr:`service_class` for the Form to
     present the UI to the User.

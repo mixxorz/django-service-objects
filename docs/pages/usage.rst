@@ -1,6 +1,5 @@
-
-Examples
-========
+Usage
+=====
 
 
 Service

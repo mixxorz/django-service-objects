@@ -9,7 +9,7 @@ This is a small library providing a `Service` base class to derive your service 
 
 ## Documentation
 
-**TODO** add link to readthedocs.org site for django-service-objects
+Docs can be found on [readthedocs](http://django-service-objects.readthedocs.io/en/stable/).
 
 [latest-version-image]: https://img.shields.io/pypi/v/django-service-objects.svg
 [latest-version-link]: https://pypi.python.org/pypi/django-service-objects/
