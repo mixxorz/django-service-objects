@@ -59,9 +59,10 @@ class Service(forms.Form):
         Returns the context for :meth:`process`
         :return:
         """
-        yield
         if self.db_transaction:
-            return transaction.atomic()
+            yield transaction.atomic()
+        else:
+            yield
 
 
 class ModelService(with_metaclass(models.ModelFormMetaclass, Service)):
