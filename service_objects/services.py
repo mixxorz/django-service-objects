@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from six import with_metaclass
 
 from django import forms
@@ -13,6 +15,8 @@ class Service(forms.Form):
     Business Rules functionality.  Input values are validated against
     the Service's defined fields before calling main functionality.
     """
+
+    db_transaction = True
 
     @classmethod
     def execute(cls, inputs, files=None, **kwargs):
@@ -31,7 +35,7 @@ class Service(forms.Form):
         """
         instance = cls(inputs, files, **kwargs)
         instance.service_clean()
-        with transaction.atomic():
+        with instance._process_context():
             return instance.process()
 
     def service_clean(self):
@@ -48,6 +52,16 @@ class Service(forms.Form):
         functionality.
         """
         raise NotImplementedError()
+
+    @contextmanager
+    def _process_context(self):
+        """
+        Returns the context for :meth:`process`
+        :return:
+        """
+        yield
+        if self.db_transaction:
+            return transaction.atomic()
 
 
 class ModelService(with_metaclass(models.ModelFormMetaclass, Service)):
