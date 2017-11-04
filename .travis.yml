@@ -1,17 +1,24 @@
 language: python
-python: 3.6
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
 env:
-  - TOXENV=flake8
-  - TOXENV=py27-django18
-  - TOXENV=py27-django110
-  - TOXENV=py27-django111
-  - TOXENV=py34-django18
-  - TOXENV=py34-django110
-  - TOXENV=py34-django111
-  - TOXENV=py35-django18
-  - TOXENV=py35-django110
-  - TOXENV=py35-django111
-  - TOXENV=py36-django111
+  - DJANGO=1.8
+  - DJANGO=1.9
+  - DJANGO=1.10
+  - DJANGO=1.11
+matrix:
+  exclude:
+    # Python/Django combinations that aren't officially supported
+    - { python: 3.6, env: DJANGO=1.8 }
+    - { python: 3.6, env: DJANGO=1.9 }
+    - { python: 3.6, env: DJANGO=1.10 }
+  include:
+    - { python: 2.7, env: TOXENV=flake8 }
+
 install:
-  - pip install tox
-script: tox
+  - pip install tox-travis
+script:
+  - tox
