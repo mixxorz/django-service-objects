@@ -1,7 +1,7 @@
 try:
-    from unittest.mock import Mock
+    from unittest.mock import Mock, patch
 except ImportError:
-    from mock import Mock
+    from mock import Mock, patch
 
 import six
 from unittest import TestCase
@@ -28,7 +28,12 @@ class MockService(Service):
     bar = forms.CharField(required=True)
 
 
+class NoDbTransactionService(Service):
+    db_transaction = False
+
+
 MockService.process = Mock()
+NoDbTransactionService.process = Mock()
 
 
 class ServiceTest(TestCase):
@@ -55,6 +60,15 @@ class ServiceTest(TestCase):
         self.assertIn('InvalidInputsError', repr(cm.exception))
         self.assertIn('bar', repr(cm.exception))
         self.assertIn('This field is required.', repr(cm.exception))
+
+    @patch('service_objects.services.transaction')
+    def test_db_transaction_flag(self, mock_transaction):
+
+        NoDbTransactionService.execute({})
+        assert not mock_transaction.atomic.called
+
+        MockService.execute({'bar': 'Hello'})
+        assert mock_transaction.atomic.called
 
 
 class ModelServiceTest(TestCase):
