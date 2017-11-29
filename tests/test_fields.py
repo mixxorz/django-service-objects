@@ -3,11 +3,31 @@ from unittest import TestCase
 from django import forms
 from django.core.exceptions import ValidationError
 
-from service_objects.fields import MultipleFormField
+from service_objects.fields import AnyField, MultipleFormField
 
 
 class FooForm(forms.Form):
     name = forms.CharField(max_length=5)
+
+
+class AnyFieldTest(TestCase):
+
+    def test_clean(self):
+        f = AnyField()
+
+        self.assertTrue(f.clean([1, 2, 3]))
+        with self.assertRaises(ValidationError) as cm:
+            f.clean('')
+
+        self.assertIn('This field is required.', cm.exception.message)
+
+    def test_empty_values(self):
+        f = AnyField(empty_values=True)
+
+        self.assertEqual(f.clean(None), None)
+        self.assertEqual(f.clean(''), '')
+        self.assertEqual(f.clean([]), [])
+        self.assertEqual(f.clean({}), {})
 
 
 class MultipleFormFieldTest(TestCase):

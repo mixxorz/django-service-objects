@@ -29,6 +29,7 @@ Like every other Python Package
 
    pages/philosophy
    pages/usage
+   pages/faq
    pages/reference
    pages/support
 

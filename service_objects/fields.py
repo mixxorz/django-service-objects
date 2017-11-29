@@ -3,6 +3,15 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext_lazy
 
 
+class AnyField(forms.Field):
+
+    def __init__(self, empty_values=False, *args, **kwargs):
+        super(AnyField, self).__init__(*args, **kwargs)
+
+        if empty_values:
+            self.empty_values = ()
+
+
 class MultipleFormField(forms.Field):
     """
     A field for :class:`Service` that accepts a list of objects which is
