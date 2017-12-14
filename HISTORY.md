@@ -1,5 +1,11 @@
 # Release History
 
+## 0.3.0 (2017-12-14)
+
+**Features and Improvements**
+
+* Add `db_transaction` flag to Service
+
 ## 0.2.0 (2017-09-02)
 
 **Features and Improvements**
