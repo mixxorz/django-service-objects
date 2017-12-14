@@ -9,14 +9,17 @@ env:
   - DJANGO=1.9
   - DJANGO=1.10
   - DJANGO=1.11
+  - DJANGO=2.0
 matrix:
   exclude:
     # Python/Django combinations that aren't officially supported
     - { python: 3.6, env: DJANGO=1.8 }
     - { python: 3.6, env: DJANGO=1.9 }
     - { python: 3.6, env: DJANGO=1.10 }
+    - { python: 2.7, env: DJANGO=2.0 }
   include:
-    - { python: 2.7, env: TOXENV=flake8 }
+    - { python: 3.6, env: TOXENV=flake8 }
+    - { python: 3.6, env: TOXENV=readme }
 
 install:
   - pip install tox-travis
