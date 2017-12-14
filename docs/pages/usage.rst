@@ -51,6 +51,22 @@ A code sample is worth a thousand words.
             return booking
 
 
+Database transactions
++++++++++++++++++++++
+
+By default, the process method on services runs inside a transaction. This is so
+that if an exception is raised while executing your service, the database gets
+rolled back to a clean state. If you don't want this behavior, you can set
+``db_transaction = False`` on the service class.
+
+.. code-block:: python
+    :caption: your_app/services.py
+    :name: service-no-transaction-py
+
+    class NoDbTransactionService(Service):
+        db_transaction = False
+
+
 Function Based View
 -------------------
 
