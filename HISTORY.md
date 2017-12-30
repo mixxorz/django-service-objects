@@ -1,5 +1,11 @@
 # Release History
 
+## 0.3.1 (2017-12-30)
+
+**Bug fixes**
+
+* Fix `process` not called inside transaction by default
+
 ## 0.3.0 (2017-12-14)
 
 **Features and Improvements**
