@@ -65,10 +65,10 @@ class ServiceTest(TestCase):
     def test_db_transaction_flag(self, mock_transaction):
 
         NoDbTransactionService.execute({})
-        assert not mock_transaction.atomic.called
+        assert not mock_transaction.atomic.return_value.__enter__.called
 
         MockService.execute({'bar': 'Hello'})
-        assert mock_transaction.atomic.called
+        assert mock_transaction.atomic.return_value.__enter__.called
 
 
 class ModelServiceTest(TestCase):

@@ -60,7 +60,8 @@ class Service(forms.Form):
         :return:
         """
         if self.db_transaction:
-            yield transaction.atomic()
+            with transaction.atomic():
+                yield
         else:
             yield
 
