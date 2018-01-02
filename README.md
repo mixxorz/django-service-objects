@@ -54,6 +54,7 @@ In your views
 ```python
 # views.py
 
+# Function Based View
 def create_user_view(request):
     form = NewUserForm()
     if request.method == 'POST':
@@ -67,6 +68,15 @@ def create_user_view(request):
                 form.add_error(None, 'Something went wrong')
 
     return render(request, 'registration/new-user.html', {'form': form})
+
+
+# Class Based View
+class CreateUserView(ServiceView):
+    form_class = NewUserForm
+    service_class = CreateUser
+    template_name = 'registration/new-user.html'
+    success_url = '/success/'
+
 ```
 
 A management command
