@@ -1,11 +1,14 @@
 try:
-    from unittest.mock import MagicMock, PropertyMock, patch
+    from unittest.mock import MagicMock, PropertyMock, patch, call
 except ImportError:
-    from mock import MagicMock, PropertyMock, patch
+    from mock import MagicMock, PropertyMock, patch, call
 
 from unittest import TestCase
 
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+
 from service_objects.views import ServiceView
+from service_objects.errors import InvalidInputsError
 
 
 MockService = MagicMock()
@@ -23,12 +26,45 @@ class FooView(ServiceView):
     service_class = MockService
 
 
+class ExceptionServiceException(Exception):
+    pass
+
+
 ExceptionService = MagicMock()
-ExceptionService.execute = MagicMock(side_effect=Exception('Testing'))
+ExceptionService.execute = MagicMock(side_effect=ExceptionServiceException('Testing'))
+
+validation_error = ValidationError('Testing')
+
+ValidationErrorService = MagicMock()
+ValidationErrorService.execute = MagicMock(side_effect=validation_error)
+
+field1_error = ValidationError('field1 Error')
+non_field_error = ValidationError('nonfield Error')
+
+invalid_inputs = InvalidInputsError(
+    {
+        NON_FIELD_ERRORS: [non_field_error,],
+        'field1': [field1_error,],
+    }, 
+    {
+        'field1': [field1_error,],
+    }
+)
+
+InvalidInputsErrorService = MagicMock()
+InvalidInputsErrorService.execute = MagicMock(side_effect=invalid_inputs)
 
 
 class ExceptionView(ServiceView):
     service_class = ExceptionService
+
+
+class ValidationErrorView(ServiceView):
+    service_class = ValidationErrorService
+
+
+class InvalidInputsErrorView(ServiceView):
+    service_class = InvalidInputsErrorService
 
 
 class ViewTest(TestCase):
@@ -102,11 +138,43 @@ class ViewTest(TestCase):
 
         view = ExceptionView()
         view.request = request
+
+        with self.assertRaises(ExceptionServiceException):
+            view.form_valid(form)
+
+        form_valid.assert_not_called()
+        form_invalid.assert_not_called()
+
+    @patch('django.views.generic.FormView.form_valid')
+    @patch('django.views.generic.FormView.form_invalid')
+    def test_form_valid_validation_error(self, form_invalid, form_valid):
+        request, _, _ = self.build_request('GET', {})
+        form = MagicMock()
+
+        view = ValidationErrorView()
+        view.request = request
         view.form_valid(form)
 
         form_valid.assert_not_called()
         form_invalid.assert_called_once_with(form)
-        form.add_error.assert_called_once_with(None, 'Testing')
+        form.add_error.assert_called_once_with(None, validation_error)
+
+    @patch('django.views.generic.FormView.form_valid')
+    @patch('django.views.generic.FormView.form_invalid')
+    def test_form_valid_invalid_inputs_error(self, form_invalid, form_valid):
+        request, _, _ = self.build_request('GET', {})
+        form = MagicMock()
+
+        view = InvalidInputsErrorView()
+        view.request = request
+        view.form_valid(form)
+
+        form_valid.assert_not_called()
+        form_invalid.assert_called_once_with(form)
+        form.add_error.assert_has_calls([
+            call(NON_FIELD_ERRORS, [non_field_error]),
+            call('field1', [field1_error])
+            ], any_order=True)
 
     @patch('django.views.generic.FormView.form_valid')
     @patch('django.views.generic.FormView.form_invalid')

@@ -1,4 +1,9 @@
+from six import viewitems
+
 from django.views.generic import FormView
+from django.core.exceptions import ValidationError
+
+from .errors import InvalidInputsError
 
 
 class ServiceView(FormView):
@@ -66,6 +71,10 @@ class ServiceView(FormView):
             )
             return super(ServiceView, self).form_valid(form)
 
-        except Exception as e:
-            form.add_error(None, str(e))
+        except InvalidInputsError as e:
+            for k, v in viewitems(e.errors):
+                form.add_error(k, v)
+            return self.form_invalid(form)
+        except ValidationError as e:
+            form.add_error(None, e)
             return self.form_invalid(form)
