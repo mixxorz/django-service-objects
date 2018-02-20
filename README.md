@@ -7,11 +7,29 @@ Service objects for Django
 
 This is a small library providing a `Service` base class to derive your service objects from. What are service objects? You can read more about the whys and hows in [this blog post](http://mitchel.me/2017/django-service-objects/), but for the most part, it encapsulates your business logic, decoupling it from your views and model methods. Put your business logic in service objects.
 
+## Installation guide
+
+From pypi: `pip install django_service_objects`
+
+Include the library in your `settings.py` file.
+
+```python
+## settings.py
+
+INSTALLED_APPS = (
+    ...
+    'service_objects',
+    ...
+)
+```
+
 ## Example
 
 Let's say you want to register new users. You could make a `CreateUser` service.
 
 ```python
+from service_objects.services import Service
+
 class CreateUser(Service):
     email = forms.EmailField()
     password = forms.CharField(max_length=255)
