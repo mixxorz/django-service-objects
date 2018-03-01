@@ -9,12 +9,14 @@ This is a small library providing a `Service` base class to derive your service 
 
 ## Installation guide
 
-From pypi: `pip install django_service_objects`
+Install from pypi:
 
-Include the library in your `settings.py` file.
+`pip install django-service-objects`
+
+Add `service_objects` to your `INSTALLED_APPS`:
 
 ```python
-## settings.py
+# settings.py
 
 INSTALLED_APPS = (
     ...
