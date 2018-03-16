@@ -11,25 +11,8 @@ from django.db import models
 
 from service_objects.errors import InvalidInputsError
 from service_objects.services import Service, ModelService
-
-
-class FooModel(models.Model):
-    one = models.CharField(max_length=1)
-
-    class Meta:
-        app_label = 'tests'
-
-
-class FooService(Service):
-    bar = forms.CharField(required=True)
-
-
-class MockService(Service):
-    bar = forms.CharField(required=True)
-
-
-class NoDbTransactionService(Service):
-    db_transaction = False
+from tests.models import FooModel
+from tests.services import FooService, MockService, NoDbTransactionService
 
 
 MockService.process = Mock()
