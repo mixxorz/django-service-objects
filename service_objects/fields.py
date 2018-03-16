@@ -1,6 +1,7 @@
 from django import forms
+from django.apps import apps
 from django.core.exceptions import ValidationError
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ungettext_lazy, gettext_lazy as _
 
 
 class MultipleFormField(forms.Field):
@@ -58,3 +59,52 @@ class MultipleFormField(forms.Field):
             item_forms.append(item_form)
 
         return item_forms
+
+
+class ModelField(forms.Field):
+    """
+    A field for :class:`Service` that accepts an object of the specified
+    :class:`Model`.
+
+        :param model_class: Django :class:`Model` or dotted string of :
+            class:`Model` name
+        :param allow_unsaved: Whether the object is required to be saved to
+            the database
+    """
+    error_model_class = _("%(cls_name)s(%(model_class)r) is invalid.  First "
+                          "parameter of ModelField must be either a model or a "
+                          "model name.")
+    error_type = _("Objects needs to be of type %(model_class)r")
+    error_unsaved = _("Unsaved objects are not allowed.")
+
+    def __init__(self, model_class, allow_unsaved=False, *args, **kwargs):
+        super(ModelField, self).__init__(*args, **kwargs)
+
+        try:
+            model_class._meta.model_name
+        except AttributeError:
+            assert isinstance(model_class, str), self.error_model_class % {
+                'cls_name': self.__class__.__name__,
+                'model_class': model_class
+            }
+
+        self.model_class = model_class
+        if isinstance(model_class, str):
+            label = model_class.split('.')
+            app_label = ".".join(label[:-1])
+            model_name = label[-1]
+            self.model_class = apps.get_model(app_label, model_name)
+
+        self.allow_unsaved = allow_unsaved
+
+    def clean(self, value):
+        if not isinstance(value, self.model_class):
+            raise ValidationError(self.error_type % {
+                'model_class': self.model_class
+                }
+            )
+
+        if (self.allow_unsaved is False and value.id is None):
+            raise ValidationError(self.error_unsaved)
+
+        return value

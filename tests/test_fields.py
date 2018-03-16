@@ -3,7 +3,8 @@ from unittest import TestCase
 from django import forms
 from django.core.exceptions import ValidationError
 
-from service_objects.fields import MultipleFormField
+from service_objects.fields import MultipleFormField, ModelField
+from tests.models import FooModel, BarModel, NonModel
 from tests.forms import FooForm
 
 
@@ -57,3 +58,51 @@ class MultipleFormFieldTest(TestCase):
 
         self.assertEqual(
             'There needs to be at most 2 items.', cm.exception.message)
+
+
+class ModelFieldTest(TestCase):
+
+    def test_init_model_class_invalid(self):
+        with self.assertRaisesRegexp(AssertionError, "NonModel"):
+            rv = ModelField(NonModel)
+
+    def test_init_model_class_valid(self):
+        rv = ModelField(FooModel)
+
+        self.assertEqual(FooModel, rv.model_class)
+
+    def test_init_model_class_string(self):
+        rv = ModelField('tests.BarModel')
+
+        self.assertEqual(BarModel, rv.model_class)
+
+    def test_model_invalid_type(self):
+        model_field = ModelField(FooModel)
+        model = BarModel(one='Z')
+
+        with self.assertRaisesRegexp(ValidationError, "FooModel"):
+            cleaned_data = model_field.clean(model)
+
+    def test_model_valid_type(self):
+        model_field = ModelField(FooModel)
+        model = FooModel(one='Z')
+        model.pk = 1
+
+        cleaned_data = model_field.clean(model)
+
+        self.assertTrue(model, cleaned_data)
+
+    def test_allow_unsaved_false(self):
+        model_field = ModelField(FooModel)
+        model = FooModel(one='Z')
+
+        with self.assertRaisesRegexp(ValidationError, "[Uu]nsaved"):
+            cleaned_data = model_field.clean(model)
+
+    def test_allow_unsaved_true(self):
+        model_field = ModelField(FooModel, allow_unsaved=True)
+        model = FooModel(one='Z')
+
+        cleaned_data = model_field.clean(model)
+
+        self.assertTrue(model, cleaned_data)
