@@ -4,10 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from service_objects.fields import MultipleFormField
-
-
-class FooForm(forms.Form):
-    name = forms.CharField(max_length=5)
+from tests.forms import FooForm
 
 
 class MultipleFormFieldTest(TestCase):
