@@ -1,9 +1,9 @@
-[coverage:run]
+[run]
 	branch = True
 	include =
 		*/service_objects/*
 
-[coverage:report]
+[report]
 	show_missing = True
 	precision = 2
 	sort = Name
