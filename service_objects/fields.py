@@ -120,6 +120,8 @@ class MultipleModelField(ModelField):
     A multiple model version of :class:`ModelField`, will check each passed
     in object to match the specified :class:`Model`.
 
+    Will always return data as a list even if only a single object is passed in.
+
         :param model_class: Django :class:`Model` or dotted string of :
             class:`Model` name
         :param allow_unsaved: Whether the object is required to be saved to
