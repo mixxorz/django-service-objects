@@ -15,5 +15,5 @@ test: flake
 	python runtests.py
 
 coverage: flake
-	coverage run --source='service_objects' runtests.py
+	coverage run runtests.py
 	coverage report
