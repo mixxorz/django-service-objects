@@ -3,7 +3,7 @@ from unittest import TestCase
 from django import forms
 from django.core.exceptions import ValidationError
 
-from service_objects.fields import MultipleFormField, ModelField
+from service_objects.fields import MultipleFormField, ModelField, MultipleModelField
 from tests.models import FooModel, BarModel, NonModel
 from tests.forms import FooForm
 
@@ -106,3 +106,55 @@ class ModelFieldTest(TestCase):
         cleaned_data = model_field.clean(model)
 
         self.assertTrue(model, cleaned_data)
+
+
+class MultipleModelFieldTest(TestCase):
+
+    def test_multiple_invalid_type(self):
+        model_field = MultipleModelField(FooModel, allow_unsaved=True)
+        objects = [
+            FooModel(one='a'),
+            FooModel(one='b'),
+            BarModel(one='c')
+        ]
+
+        with self.assertRaisesRegexp(ValidationError, "FooModel"):
+            cleaned_data = model_field.clean(objects)
+
+    def test_multiple_unsaved_false(self):
+        model_field = MultipleModelField(FooModel)
+        objects = [
+            FooModel(one='a'),
+            FooModel(one='b')
+        ]
+        for obj in objects:
+            obj.pk = 1
+        objects.append(FooModel(one='c'))
+
+        with self.assertRaisesRegexp(ValidationError, "[Uu]nsaved"):
+            cleaned_data = model_field.clean(objects)
+
+
+    def test_multiple_non_list(self):
+        model_field = MultipleModelField(FooModel)
+        obj = FooModel(one='a')
+        obj.pk = 1
+
+        cleaned_data = model_field.clean(obj)
+
+        self.assertTrue(isinstance(cleaned_data, list))
+        self.assertEqual(obj, cleaned_data[0])
+
+    def test_multiple_valid(self):
+        model_field = MultipleModelField(FooModel)
+        objects = [
+            FooModel(one='a'),
+            FooModel(one='b')
+        ]
+        for obj in objects:
+            obj.pk = 1
+
+        cleaned_data = model_field.clean(objects)
+
+        self.assertEqual(objects, cleaned_data)
+

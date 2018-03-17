@@ -98,13 +98,39 @@ class ModelField(forms.Field):
         self.allow_unsaved = allow_unsaved
 
     def clean(self, value):
-        if not isinstance(value, self.model_class):
+        self.check_type(value)
+        self.check_unsaved(value)
+
+        return value
+
+    def check_type(self, item):
+        if not isinstance(item, self.model_class):
             raise ValidationError(self.error_type % {
                 'model_class': self.model_class
                 }
             )
 
-        if (self.allow_unsaved is False and value.id is None):
+    def check_unsaved(self, item):
+        if (self.allow_unsaved is False and item.id is None):
             raise ValidationError(self.error_unsaved)
 
-        return value
+
+class MultipleModelField(ModelField):
+    """
+    A multiple model version of :class:`ModelField`, will check each passed
+    in object to match the specified :class:`Model`.
+
+        :param model_class: Django :class:`Model` or dotted string of :
+            class:`Model` name
+        :param allow_unsaved: Whether the object is required to be saved to
+            the database
+
+    """
+    def clean(self, values):
+        if not isinstance(values, list):
+            values = [values]
+
+        for value in values:
+            self.check_type(value)
+            self.check_unsaved(value)
+        return values
