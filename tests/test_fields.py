@@ -134,16 +134,13 @@ class MultipleModelFieldTest(TestCase):
         with self.assertRaisesRegexp(ValidationError, "[Uu]nsaved"):
             cleaned_data = model_field.clean(objects)
 
-
     def test_multiple_non_list(self):
         model_field = MultipleModelField(FooModel)
         obj = FooModel(one='a')
         obj.pk = 1
 
-        cleaned_data = model_field.clean(obj)
-
-        self.assertTrue(isinstance(cleaned_data, list))
-        self.assertEqual(obj, cleaned_data[0])
+        with self.assertRaisesRegexp(ValidationError, "[Ii]terable"):
+            cleaned_data = model_field.clean(obj)
 
     def test_multiple_valid(self):
         model_field = MultipleModelField(FooModel)
