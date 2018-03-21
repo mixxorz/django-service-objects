@@ -128,9 +128,11 @@ class MultipleModelField(ModelField):
             the database
 
     """
+    error_non_list = _("Object is not iterable")
+
     def clean(self, values):
         if not isinstance(values, list):
-            values = [values]
+            raise ValidationError(self.error_non_list)
 
         for value in values:
             self.check_type(value)
