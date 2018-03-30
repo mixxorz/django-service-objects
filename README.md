@@ -147,10 +147,10 @@ Docs can be found on [readthedocs](http://django-service-objects.readthedocs.io/
 If you have any questions about service objects, you can tweet me [@mixxorz](https://twitter.com/mixxorz).
 
 [latest-version-image]: https://img.shields.io/pypi/v/django-service-objects.svg
-[latest-version-link]: https://pypi.python.org/pypi/django-service-objects/
+[latest-version-link]: https://pypi.org/project/django-service-objects/
 [build-status-image]: https://img.shields.io/travis/mixxorz/django-service-objects/master.svg
 [build-status-link]: https://travis-ci.org/mixxorz/django-service-objects
 [python-support-image]: https://img.shields.io/pypi/pyversions/django-service-objects.svg
-[python-support-link]: https://pypi.python.org/pypi/django-service-objects
+[python-support-link]: https://pypi.org/project/django-service-objects/
 [license-image]: https://img.shields.io/pypi/l/django-service-objects.svg
 [license-link]: https://github.com/mixxorz/django-service-objects/blob/master/LICENSE
