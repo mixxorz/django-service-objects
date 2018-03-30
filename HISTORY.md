@@ -1,5 +1,11 @@
 # Release History
 
+## 0.4.0 (2018-03-30)
+
+**Features and Improvements**
+
+* Add `ModelField` and `MultipleModelField`
+
 ## 0.3.1 (2017-12-30)
 
 **Bug fixes**
@@ -16,8 +22,8 @@
 
 **Features and Improvements**
 
-* Add ServiceView
-* Add ModelService
+* Add `ServiceView`
+* Add `ModelService`
 * Add pt_BR localization
 
 ## 0.1.0 (2017-08-13)

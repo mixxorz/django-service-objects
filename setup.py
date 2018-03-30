@@ -4,15 +4,6 @@ from setuptools import find_packages, setup
 
 import service_objects
 
-pypi_readme = """
-django-service-objects
-======================
-
-Service objects for Django
-
-`Go to GitHub for more info <https://github.com/mixxorz/django-service-objects>`_
-"""  # noqa
-
 
 def read_file(filename):
     with open(join(dirname(abspath(__file__)), filename)) as f:
@@ -29,7 +20,8 @@ setup(
     include_package_data=True,
     license=service_objects.__license__,
     description=service_objects.__doc__,
-    long_description=pypi_readme,
+    long_description=read_file('README.md'),
+    long_description_content_type='text/markdown',
     url='https://github.com/mixxorz/django-service-objects',
     author='Mitchel Cabuloy',
     author_email='mixxorz@gmail.com',

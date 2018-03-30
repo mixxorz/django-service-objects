@@ -4,3 +4,4 @@ six
 flake8
 coverage
 tox
+twine
