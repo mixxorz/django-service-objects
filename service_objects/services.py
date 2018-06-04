@@ -1,6 +1,8 @@
+import abc
 from contextlib import contextmanager
 
-from six import with_metaclass
+from django.forms.forms import DeclarativeFieldsMetaclass
+from six import with_metaclass, add_metaclass
 
 from django import forms
 from django.forms import models
@@ -9,6 +11,11 @@ from django.db import transaction, DEFAULT_DB_ALIAS
 from .errors import InvalidInputsError
 
 
+class ServiceMetaclass(abc.ABCMeta, DeclarativeFieldsMetaclass):
+    pass
+
+
+@add_metaclass(ServiceMetaclass)
 class Service(forms.Form):
     """
     Based on Django's :class:`Form`, designed to encapsulate
@@ -47,12 +54,13 @@ class Service(forms.Form):
         if not self.is_valid():
             raise InvalidInputsError(self.errors, self.non_field_errors())
 
+    @abc.abstractmethod
     def process(self):
         """
         Main method to be overridden; contains the Business Rules
         functionality.
         """
-        raise NotImplementedError()
+        pass
 
     @contextmanager
     def _process_context(self):
