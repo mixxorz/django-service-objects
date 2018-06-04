@@ -12,7 +12,8 @@ try:
     LONG_DESCRIPTION = pypandoc.convert(README_PATH, 'rst')
 except (IOError, ImportError):
     if os.path.isfile(README_PATH):
-        LONG_DESCRIPTION = open(README_PATH).read()
+        with open(README_PATH) as f:
+            LONG_DESCRIPTION = f.read()
     else:
         LONG_DESCRIPTION = ''
 
