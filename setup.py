@@ -1,17 +1,23 @@
-from os import chdir
-from os.path import abspath, dirname, join, normpath
+import os
 from setuptools import find_packages, setup
 
 import service_objects
 
 
-def read_file(filename):
-    with open(join(dirname(abspath(__file__)), filename)) as f:
-        return f.read()
+BASE_DIR = os.path.dirname(__file__)
+README_PATH = os.path.join(BASE_DIR, 'README.md')
 
+try:
+    import pypandoc
+    LONG_DESCRIPTION = pypandoc.convert(README_PATH, 'rst')
+except (IOError, ImportError):
+    if os.path.isfile(README_PATH):
+        LONG_DESCRIPTION = open(README_PATH).read()
+    else:
+        LONG_DESCRIPTION = ''
 
 # allow setup.py to be run from any path
-chdir(normpath(abspath(dirname(__file__))))
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.path.pardir)))
 
 setup(
     name='django-service-objects',
@@ -20,7 +26,7 @@ setup(
     include_package_data=True,
     license=service_objects.__license__,
     description=service_objects.__doc__,
-    long_description=read_file('README.md'),
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     url='https://github.com/mixxorz/django-service-objects',
     author='Mitchel Cabuloy',
