@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from django import forms
 from django.db import transaction, DEFAULT_DB_ALIAS
 from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.models import ModelFormMetaclass
 from django.utils import six
 
 from .errors import InvalidInputsError
@@ -73,7 +74,7 @@ class Service(forms.Form):
             yield
 
 
-class ModelServiceMetaclass(ServiceMetaclass, models.ModelFormMetaclass):
+class ModelServiceMetaclass(ServiceMetaclass, ModelFormMetaclass):
     pass
 
 
