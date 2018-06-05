@@ -2,7 +2,7 @@ import abc
 from contextlib import contextmanager
 
 from django.forms.forms import DeclarativeFieldsMetaclass
-from six import with_metaclass, add_metaclass
+from six import with_metaclass
 
 from django import forms
 from django.forms import models
@@ -15,7 +15,7 @@ class ServiceMetaclass(abc.ABCMeta, DeclarativeFieldsMetaclass):
     pass
 
 
-class Service(six.with_metaclass(ServiceMetaclass, forms.Form)):
+class Service(with_metaclass(ServiceMetaclass, forms.Form)):
     """
     Based on Django's :class:`Form`, designed to encapsulate
     Business Rules functionality.  Input values are validated against
