@@ -19,7 +19,7 @@ matrix:
     - { python: 2.7, env: DJANGO=2.0 }
   include:
     - { python: 3.6, env: TOXENV=flake8 }
-    - { python: 3.6, env: TOXENV=readme }
+    - { python: 3.6, env: TOXENV=docs }
 
 install:
   - pip install tox-travis

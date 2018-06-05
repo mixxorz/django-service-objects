@@ -4,7 +4,7 @@ from six import with_metaclass
 
 from django import forms
 from django.forms import models
-from django.db import transaction
+from django.db import transaction, DEFAULT_DB_ALIAS
 
 from .errors import InvalidInputsError
 
@@ -17,6 +17,7 @@ class Service(forms.Form):
     """
 
     db_transaction = True
+    using = DEFAULT_DB_ALIAS
 
     @classmethod
     def execute(cls, inputs, files=None, **kwargs):
@@ -60,7 +61,7 @@ class Service(forms.Form):
         :return:
         """
         if self.db_transaction:
-            with transaction.atomic():
+            with transaction.atomic(using=self.using):
                 yield
         else:
             yield
