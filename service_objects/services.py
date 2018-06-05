@@ -1,12 +1,10 @@
 import abc
 from contextlib import contextmanager
 
-from django.forms.forms import DeclarativeFieldsMetaclass
-from six import with_metaclass
-
 from django import forms
-from django.forms import models
 from django.db import transaction, DEFAULT_DB_ALIAS
+from django.forms.forms import DeclarativeFieldsMetaclass
+from django.utils import six
 
 from .errors import InvalidInputsError
 
@@ -15,7 +13,8 @@ class ServiceMetaclass(abc.ABCMeta, DeclarativeFieldsMetaclass):
     pass
 
 
-class Service(with_metaclass(ServiceMetaclass, forms.Form)):
+@six.add_metaclass(ServiceMetaclass)
+class Service(forms.Form):
     """
     Based on Django's :class:`Form`, designed to encapsulate
     Business Rules functionality.  Input values are validated against
@@ -74,7 +73,11 @@ class Service(with_metaclass(ServiceMetaclass, forms.Form)):
             yield
 
 
-class ModelService(with_metaclass(models.ModelFormMetaclass, Service)):
+class ModelServiceMetaclass(ServiceMetaclass, models.ModelFormMetaclass):
+    pass
+
+
+class ModelService(six.with_metaclass(ModelServiceMetaclass, Service)):
     """
     Same as :class:`Service` but auto-creates fields based on the provided
     :class:`Model`.  Additionally, You can manually create fields to override
