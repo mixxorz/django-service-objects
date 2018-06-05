@@ -10,7 +10,9 @@ README_PATH = os.path.join(BASE_DIR, 'README.md')
 try:
     import pypandoc
     LONG_DESCRIPTION = pypandoc.convert(README_PATH, 'rst')
+    LONG_DESCRIPTION_TYPE = 'text/x-rst; charset=UTF-8'
 except (IOError, ImportError):
+    LONG_DESCRIPTION_TYPE = 'text=markdown'
     if os.path.isfile(README_PATH):
         with open(README_PATH) as f:
             LONG_DESCRIPTION = f.read()
@@ -28,7 +30,7 @@ setup(
     license=service_objects.__license__,
     description=service_objects.__doc__,
     long_description=LONG_DESCRIPTION,
-    long_description_content_type='text/markdown',
+    long_description_content_type=LONG_DESCRIPTION_TYPE,
     url='https://github.com/mixxorz/django-service-objects',
     author='Mitchel Cabuloy',
     author_email='mixxorz@gmail.com',
