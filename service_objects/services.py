@@ -15,8 +15,7 @@ class ServiceMetaclass(abc.ABCMeta, DeclarativeFieldsMetaclass):
     pass
 
 
-@add_metaclass(ServiceMetaclass)
-class Service(forms.Form):
+class Service(six.with_metaclass(ServiceMetaclass, forms.Form)):
     """
     Based on Django's :class:`Form`, designed to encapsulate
     Business Rules functionality.  Input values are validated against
