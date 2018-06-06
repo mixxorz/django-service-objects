@@ -27,7 +27,7 @@ class ServiceTest(TestCase):
         MockService.process.assert_called_with()
 
     def test_process_implemented(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(TypeError):
             FooService.execute({'bar': 'Hello'})
 
     def test_fields(self):
@@ -63,6 +63,9 @@ class ModelServiceTest(TestCase):
                 model = FooModel
                 fields = '__all__'
 
+            def process(self):
+                pass
+
         f = FooModelService()
 
         field_names = list(six.iterkeys(f.fields))
@@ -77,6 +80,9 @@ class ModelServiceTest(TestCase):
             class Meta:
                 model = FooModel
                 fields = '__all__'
+
+            def process(self):
+                pass
 
         f = FooModelService()
 
