@@ -1,18 +1,12 @@
 from six import viewitems
 
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView, CreateView
 from django.core.exceptions import ValidationError
 
 from .errors import InvalidInputsError
 
 
-class ServiceView(FormView):
-    """
-    Based on Django's :class:`FormView`, designed to call a
-    :class:`Service` class if the Form is valid.  If :attr:`form_class` is
-    ``None``, ServiceView will use :attr:`service_class` for the Form to
-    present the UI to the User.
-    """
+class ServiceViewMixin(object):
 
     service_class = None
 
@@ -69,7 +63,7 @@ class ServiceView(FormView):
                 self.get_service_files(),
                 **self.get_service_kwargs()
             )
-            return super(ServiceView, self).form_valid(form)
+            return super(ServiceViewMixin, self).form_valid(form)
 
         except InvalidInputsError as e:
             for k, v in viewitems(e.errors):
@@ -78,3 +72,20 @@ class ServiceView(FormView):
         except ValidationError as e:
             form.add_error(None, e)
             return self.form_invalid(form)
+
+
+
+class ServiceView(ServiceViewMixin, FormView):
+    """
+    Based on Django's :class:`FormView`, designed to call a
+    :class:`Service` class if the Form is valid.  If :attr:`form_class` is
+    ``None``, ServiceViewMixin will use :attr:`service_class` for the Form to
+    present the UI to the User.
+    """
+
+class CreateServiceView(ServiceViewMixin, CreateView):
+     """Based on Django's :class:`CreateView`, designed to call the :class:`Service` class if the form is valid."""
+
+
+class UpdateServiceView(ServiceViewMixin, UpdateView):
+     """Based on Django's :class:`UpdateView`, designed to call the :class:`Service` class if the form is valid."""
