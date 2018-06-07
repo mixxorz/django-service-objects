@@ -7,9 +7,8 @@ from unittest import TestCase
 
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
-from service_objects.views import ServiceView
 from service_objects.errors import InvalidInputsError
-
+from service_objects.views import ServiceView
 
 MockService = MagicMock()
 
@@ -45,7 +44,7 @@ invalid_inputs = InvalidInputsError(
     {
         NON_FIELD_ERRORS: [non_field_error,],
         'field1': [field1_error,],
-    }, 
+    },
     {
         'field1': [field1_error,],
     }

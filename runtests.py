@@ -4,7 +4,6 @@ import django
 from django.conf import settings
 from django.test.runner import DiscoverRunner
 
-
 settings.configure(
     DATABASES={
         'default': {

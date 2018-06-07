@@ -3,17 +3,15 @@ try:
 except ImportError:
     from mock import Mock, patch
 
-import six
 from unittest import TestCase
 
+import six
 from django import forms
-from django.db import models
 
 from service_objects.errors import InvalidInputsError
-from service_objects.services import Service, ModelService
+from service_objects.services import ModelService
 from tests.models import FooModel
 from tests.services import FooService, MockService, NoDbTransactionService
-
 
 MockService.process = Mock()
 NoDbTransactionService.process = Mock()
