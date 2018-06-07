@@ -1,11 +1,10 @@
 from unittest import TestCase
 
-from django import forms
 from django.core.exceptions import ValidationError
 
 from service_objects.fields import MultipleFormField, ModelField, MultipleModelField
-from tests.models import FooModel, BarModel, NonModel
 from tests.forms import FooForm
+from tests.models import FooModel, BarModel, NonModel
 
 
 class MultipleFormFieldTest(TestCase):
