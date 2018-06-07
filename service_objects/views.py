@@ -83,8 +83,14 @@ class ServiceView(ServiceViewMixin, FormView):
 
 
 class CreateServiceView(ServiceViewMixin, CreateView):
-     """Based on Django's :class:`CreateView`, designed to call the :class:`Service` class if the form is valid."""
+    """
+    Based on Django's :class:`CreateView`, designed to call the
+    :class:`Service` class if the form is valid.
+    """
 
 
 class UpdateServiceView(ServiceViewMixin, UpdateView):
-     """Based on Django's :class:`UpdateView`, designed to call the :class:`Service` class if the form is valid."""
+    """
+    Based on Django's :class:`UpdateView`, designed to call the
+    :class:`Service` class if the form is valid.
+    """
