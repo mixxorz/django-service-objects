@@ -1,7 +1,6 @@
-from six import viewitems
-
-from django.views.generic import FormView
 from django.core.exceptions import ValidationError
+from django.views.generic import FormView
+from six import viewitems
 
 from .errors import InvalidInputsError
 
