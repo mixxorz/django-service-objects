@@ -16,3 +16,5 @@ class InvalidInputsError(Exception):
     def __repr__(self):
         return '{}({}, {})'.format(
             type(self).__name__, repr(self.errors), repr(self.non_field_errors))
+
+    __str__ = __repr__
