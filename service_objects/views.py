@@ -1,7 +1,6 @@
-from six import viewitems
-
-from django.views.generic import FormView, UpdateView, CreateView
 from django.core.exceptions import ValidationError
+from django.views.generic import FormView, UpdateView, CreateView
+from six import viewitems
 
 from .errors import InvalidInputsError
 
@@ -74,7 +73,6 @@ class ServiceViewMixin(object):
             return self.form_invalid(form)
 
 
-
 class ServiceView(ServiceViewMixin, FormView):
     """
     Based on Django's :class:`FormView`, designed to call a
@@ -82,6 +80,7 @@ class ServiceView(ServiceViewMixin, FormView):
     ``None``, ServiceViewMixin will use :attr:`service_class` for the Form to
     present the UI to the User.
     """
+
 
 class CreateServiceView(ServiceViewMixin, CreateView):
      """Based on Django's :class:`CreateView`, designed to call the :class:`Service` class if the form is valid."""
