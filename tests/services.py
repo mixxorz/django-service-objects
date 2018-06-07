@@ -9,6 +9,12 @@ class FooService(Service):
 class MockService(Service):
     bar = forms.CharField(required=True)
 
+    def process(self):
+        pass
+
 
 class NoDbTransactionService(Service):
     db_transaction = False
+
+    def process(self):
+        pass

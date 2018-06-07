@@ -1,14 +1,20 @@
+import abc
 from contextlib import contextmanager
 
-from six import with_metaclass
-
 from django import forms
-from django.forms import models
 from django.db import transaction, DEFAULT_DB_ALIAS
+from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.models import ModelFormMetaclass
+from django.utils import six
 
 from .errors import InvalidInputsError
 
 
+class ServiceMetaclass(abc.ABCMeta, DeclarativeFieldsMetaclass):
+    pass
+
+
+@six.add_metaclass(ServiceMetaclass)
 class Service(forms.Form):
     """
     Based on Django's :class:`Form`, designed to encapsulate
@@ -47,12 +53,13 @@ class Service(forms.Form):
         if not self.is_valid():
             raise InvalidInputsError(self.errors, self.non_field_errors())
 
+    @abc.abstractmethod
     def process(self):
         """
         Main method to be overridden; contains the Business Rules
         functionality.
         """
-        raise NotImplementedError()
+        pass
 
     @contextmanager
     def _process_context(self):
@@ -67,7 +74,11 @@ class Service(forms.Form):
             yield
 
 
-class ModelService(with_metaclass(models.ModelFormMetaclass, Service)):
+class ModelServiceMetaclass(ServiceMetaclass, ModelFormMetaclass):
+    pass
+
+
+class ModelService(six.with_metaclass(ModelServiceMetaclass, Service)):
     """
     Same as :class:`Service` but auto-creates fields based on the provided
     :class:`Model`.  Additionally, You can manually create fields to override
