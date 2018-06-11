@@ -129,15 +129,17 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
         return {'commit': False}
 
     @method_decorator(csrf_protect)
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+    def changeform_view(self, request, object_id=None, form_url='',
+                        extra_context=None):
         # Currently supported by Django>=1.11,>=2.0
         if django.VERSION >= (2, 0) or django.VERSION >= (1, 11):
             with transaction.atomic(using=router.db_for_write(self.model)):
-               return self._changeform_view(request, object_id, form_url, extra_context)
+                return self._changeform_view(
+                   request, object_id, form_url, extra_context,
+                )
         return (
-            super(ModelAdminServiceView, self)
-                .changeform_view(
-                    request, object_id=None, form_url='', extra_context=None,
+            super(ModelAdminServiceView, self).changeform_view(
+                request, object_id=None, form_url='', extra_context=None,
             )
         )
 
@@ -189,7 +191,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 service_ret_form = cls.execute(
                     data=self.get_service_input(form),
                     files=self.get_service_files(request),
-                    **self.get_service_kwargs(),
+                    **self.get_service_kwargs()
                 )
             except InvalidInputsError as e:
                 for k, v in viewitems(e.errors):
