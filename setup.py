@@ -1,8 +1,8 @@
 import os
+
 from setuptools import find_packages, setup
 
 import service_objects
-
 
 BASE_DIR = os.path.dirname(__file__)
 README_PATH = os.path.join(BASE_DIR, 'README.md')
