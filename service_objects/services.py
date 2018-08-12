@@ -29,6 +29,7 @@ class Service(forms.Form):
     the Service's defined fields before calling main functionality.
     """
 
+    use_initials_as_default = False
     db_transaction = True
     using = DEFAULT_DB_ALIAS
 
@@ -75,9 +76,10 @@ class Service(forms.Form):
         Called before BaseForm.full_clean, use initial
         value as a fallback when no data is given.
         """
-        for name, field in self.fields.items():
-            if name not in self.data or not self.data[name]:
-                self.data[name] = self.get_initial_for_field(field, name)
+        if self.use_initials_as_default:
+            for name, field in self.fields.items():
+                if name not in self.data or not self.data[name]:
+                    self.data[name] = self.get_initial_for_field(field, name)
         super(Service, self).full_clean()
 
     @abc.abstractmethod
