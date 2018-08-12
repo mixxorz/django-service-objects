@@ -19,3 +19,21 @@ class NoDbTransactionService(Service):
 
     def process(self):
         pass
+
+
+class InitialDataService(Service):
+    bar = forms.CharField(required=False, initial='initial text')
+    foo = forms.CharField(required=False)
+
+    def clean_bar(self):
+        return self.cleaned_data['bar']
+
+    def process(self):
+        return self.cleaned_data
+
+
+class InvalidInitialDataService(Service):
+    bar = forms.IntegerField(required=False, initial='foo')
+
+    def process(self):
+        return self.cleaned_data

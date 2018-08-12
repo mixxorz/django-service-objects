@@ -11,7 +11,8 @@ from django import forms
 from service_objects.errors import InvalidInputsError
 from service_objects.services import ModelService
 from tests.models import FooModel
-from tests.services import FooService, MockService, NoDbTransactionService
+from tests.services import FooService, MockService, \
+    NoDbTransactionService, InitialDataService, InvalidInitialDataService
 
 MockService.process = Mock()
 NoDbTransactionService.process = Mock()
@@ -50,6 +51,17 @@ class ServiceTest(TestCase):
 
         MockService.execute({'bar': 'Hello'})
         assert mock_transaction.atomic.return_value.__enter__.called
+
+    def test_initial_data_return(self):
+        data = InitialDataService.execute({})
+        self.assertEqual('initial text', data['bar'])
+        self.assertEqual('', data['foo'])
+        data = InitialDataService.execute({'bar': 'not initial text'})
+        self.assertEqual('not initial text', data['bar'])
+
+    def test_invalid_initial_data(self):
+        with self.assertRaises(InvalidInputsError):
+            InvalidInitialDataService.execute({})
 
 
 class ModelServiceTest(TestCase):

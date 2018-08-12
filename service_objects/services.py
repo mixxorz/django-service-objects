@@ -53,6 +53,16 @@ class Service(forms.Form):
         if not self.is_valid():
             raise InvalidInputsError(self.errors, self.non_field_errors())
 
+    def full_clean(self):
+        """
+        Called before BaseForm.full_clean, use initial
+        value as a fallback when no data is given.
+        """
+        for name, field in self.fields.items():
+            if name not in self.data or not self.data[name]:
+                self.data[name] = self.get_initial_for_field(field, name)
+        super(Service, self).full_clean()
+
     @abc.abstractmethod
     def process(self):
         """
