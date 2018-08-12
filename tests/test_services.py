@@ -9,7 +9,7 @@ import six
 from django import forms
 
 from service_objects.errors import InvalidInputsError
-from service_objects.services import ModelService
+from service_objects.services import ModelService, get_initial_for_field_fill
 from tests.models import FooModel
 from tests.services import FooService, MockService, \
     NoDbTransactionService, InitialDataService, InvalidInitialDataService
@@ -62,6 +62,13 @@ class ServiceTest(TestCase):
     def test_invalid_initial_data(self):
         with self.assertRaises(InvalidInputsError):
             InvalidInitialDataService.execute({})
+
+    def test_get_initial_for_field(self):
+        form = InitialDataService()
+        initial_data = get_initial_for_field_fill(form, form.fields['bar'], 'bar')
+        self.assertEqual('initial text', initial_data)
+        initial_data = get_initial_for_field_fill(form, form.fields['foobar'], 'foobar')
+        self.assertEqual('get_initial_data', initial_data)
 
 
 class ModelServiceTest(TestCase):

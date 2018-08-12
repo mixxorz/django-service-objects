@@ -21,9 +21,14 @@ class NoDbTransactionService(Service):
         pass
 
 
+def get_initial_data():
+    return 'get_initial_data'
+
+
 class InitialDataService(Service):
     bar = forms.CharField(required=False, initial='initial text')
     foo = forms.CharField(required=False)
+    foobar = forms.CharField(required=False, initial=get_initial_data)
 
     def clean_bar(self):
         return self.cleaned_data['bar']
