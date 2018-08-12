@@ -1,5 +1,13 @@
 # Release History
 
+## unreleased
+
+**Features and Improvements**
+
+* Added ability to defined which database `Service` uses - jackton1
+* Changed `Service` into a bona fide Abstract Base Class - jackton1
+* Added `CreateServiceView` and `UpdateServiceView` - jackton1
+
 ## 0.4.0 (2018-03-30)
 
 **Features and Improvements**
