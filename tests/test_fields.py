@@ -35,13 +35,13 @@ class MultipleFormFieldTest(TestCase):
         self.assertIn('This field is required.', cm.exception.message)
 
     def test_min_count(self):
-        f = MultipleFormField(FooForm, min_count=1)
+        f = MultipleFormField(FooForm, min_count=2)
 
         with self.assertRaises(ValidationError) as cm:
-            f.clean([])
+            f.clean(['1'])
 
         self.assertEqual(
-            'There needs to be at least 1 item.', cm.exception.message)
+            'There needs to be at least 2 items.', cm.exception.message)
 
     def test_max_count(self):
         f = MultipleFormField(FooForm, max_count=2)
@@ -57,6 +57,20 @@ class MultipleFormFieldTest(TestCase):
 
         self.assertEqual(
             'There needs to be at most 2 items.', cm.exception.message)
+
+    def test_is_requred(self):
+        f = MultipleFormField(FooForm)
+        with self.assertRaises(ValidationError) as cm:
+            f.clean([])
+
+        self.assertEqual(
+            'Input is required. Expected not empty list but got [].', cm.exception.message)
+
+    def test_is_not_requred(self):
+        f = MultipleFormField(FooForm, required=False)
+        # should not raise any exception
+        f.clean(None)
+        f.clean([])
 
 
 class ModelFieldTest(TestCase):
@@ -106,6 +120,19 @@ class ModelFieldTest(TestCase):
 
         self.assertTrue(model, cleaned_data)
 
+    def test_is_requred(self):
+        f = ModelField(FooModel)
+        with self.assertRaises(ValidationError) as cm:
+            f.clean(None)
+
+        self.assertEqual(
+            'Input is required. Expected model but got None.', cm.exception.message)
+
+    def test_is_not_requred(self):
+        f = ModelField(FooModel, required=False)
+        # should not raise any exception
+        f.clean(None)
+
 
 class MultipleModelFieldTest(TestCase):
 
@@ -154,3 +181,15 @@ class MultipleModelFieldTest(TestCase):
 
         self.assertEqual(objects, cleaned_data)
 
+    def test_is_requred(self):
+        f = MultipleModelField(FooModel)
+        with self.assertRaises(ValidationError) as cm:
+            f.clean(None)
+
+        self.assertEqual(
+            'Input is required expected list of models but got None.', cm.exception.message)
+
+    def test_is_not_requred(self):
+        f = MultipleModelField(FooModel, required=False)
+        # should not raise any exception
+        f.clean(None)

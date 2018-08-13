@@ -34,6 +34,8 @@ class MultipleFormField(forms.Field):
     error_max = ungettext_lazy("There needs to be at most %(num)d item.",
                                "There needs to be at most %(num)d items.",
                                'num')
+    error_required = _("Input is required. "
+                       "Expected not empty list but got %(values)r.")
 
     def __init__(self, form_class, min_count=1, max_count=None, *args,
                  **kwargs):
@@ -44,6 +46,14 @@ class MultipleFormField(forms.Field):
         self.max_count = max_count
 
     def clean(self, values):
+        if not values and values is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'values': values
+                })
+            else:
+                return []
+
         if len(values) < self.min_count:
             raise ValidationError(self.error_min % {'num': self.min_count})
 
@@ -76,6 +86,7 @@ class ModelField(forms.Field):
                           "model name.")
     error_type = _("Objects needs to be of type %(model_class)r")
     error_unsaved = _("Unsaved objects are not allowed.")
+    error_required = _("Input is required. Expected model but got %(value)r.")
 
     def __init__(self, model_class, allow_unsaved=False, *args, **kwargs):
         super(ModelField, self).__init__(*args, **kwargs)
@@ -98,9 +109,14 @@ class ModelField(forms.Field):
         self.allow_unsaved = allow_unsaved
 
     def clean(self, value):
-        self.check_type(value)
-        self.check_unsaved(value)
-
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+        else:
+            self.check_type(value)
+            self.check_unsaved(value)
         return value
 
     def check_type(self, item):
@@ -126,9 +142,19 @@ class MultipleModelField(ModelField):
             the database
 
     """
-    error_non_list = _("Object is not iterable")
+    error_non_list = _("Object is not iterable.")
+    error_required = _("Input is required expected list "
+                       "of models but got %(values)r.")
 
     def clean(self, values):
+        if not values and values is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'values': values
+                })
+            else:
+                return values
+
         if not isinstance(values, list):
             raise ValidationError(self.error_non_list)
 
