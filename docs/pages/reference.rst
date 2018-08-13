@@ -18,7 +18,7 @@ Services module
 ---------------------------------
 
 .. automodule:: service_objects.services
-    :members:
+    :members: Service, ModelService
 
 Views module
 ------------------------------

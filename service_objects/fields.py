@@ -74,11 +74,34 @@ class MultipleFormField(forms.Field):
 class ModelField(forms.Field):
     """
     A field for :class:`Service` that accepts an object of the specified
-    :class:`Model`.
+    :class:`Model`::
 
-        :param model_class: Django :class:`Model` or dotted string of :
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+            last_updated = models.DateTimeField()
+
+
+        class UpdatePerson(Service):
+            person = ModelField(Person)
+
+            process(self):
+                person = self.cleaned_data['person']
+                person.last_updated = now()
+                person.save()
+
+
+        user = Person(first_name='John', last_name='Smith')
+        user.save()
+
+        UpdatePerson.execute({
+            'person': user
+        })
+
+
+    :param model_class: Django :class:`Model` or dotted string of :
             class:`Model` name
-        :param allow_unsaved: Whether the object is required to be saved to
+    :param allow_unsaved: Whether the object is required to be saved to
             the database
     """
     error_model_class = _("%(cls_name)s(%(model_class)r) is invalid.  First "
@@ -134,11 +157,32 @@ class ModelField(forms.Field):
 class MultipleModelField(ModelField):
     """
     A multiple model version of :class:`ModelField`, will check each passed
-    in object to match the specified :class:`Model`.
+    in object to match the specified :class:`Model`::
 
-        :param model_class: Django :class:`Model` or dotted string of :
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+
+
+        class AssociatePeople(Service):
+            people = MultipleModelField(Person, allow_unsaved=True)
+
+
+        users = [
+            Person(first_name='John', last_name='Smith'),
+            Person(first_name='Jane', last_name='Smith')
+        ]
+
+        AssociatePeople.execute({
+            'people': users
+        })
+
+        for user in users:
+            user.save()
+
+    :param model_class: Django :class:`Model` or dotted string of :
             class:`Model` name
-        :param allow_unsaved: Whether the object is required to be saved to
+    :param allow_unsaved: Whether the object is required to be saved to
             the database
 
     """

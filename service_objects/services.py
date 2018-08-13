@@ -19,7 +19,41 @@ class Service(forms.Form):
     """
     Based on Django's :class:`Form`, designed to encapsulate
     Business Rules functionality.  Input values are validated against
-    the Service's defined fields before calling main functionality.
+    the Service's defined fields before calling main functionality::
+
+        class UpdateUserEmail(Service):
+            user = ModelField(User)
+            new_email = forms.EmailField()
+
+            def process(self):
+                old_email = user.email
+                user.email = self.cleaned_data['new_email']
+                user.save()
+
+                send_email(
+                    'Email Update',
+                    'Your email was changed',
+                    'system',
+                    [old_email]
+                )
+
+
+        user = User.objects.get(id=20)
+
+        UpdateUserEmail.execute({
+            'user': user,
+            'new_email': 'John.Smith@example.com'
+        })
+
+
+    :cvar boolean db_transaction: controls if :py:meth:`execute`
+        is performed inside a Django database transaction.  Default
+        is True.
+
+    :cvar string using: In a multiple database setup, controls which
+        database connection is used from the transaction.  Defaults
+        to DEFAULT_DB_ALIAS which works in a single database setup.
+
     """
 
     db_transaction = True
@@ -82,6 +116,42 @@ class ModelService(six.with_metaclass(ModelServiceMetaclass, Service)):
     """
     Same as :class:`Service` but auto-creates fields based on the provided
     :class:`Model`.  Additionally, You can manually create fields to override
-    or extend the auto-created fields
+    or extend the auto-created fields::
+
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+            email = models.EmailField()
+
+
+        class CreatePersonService(Service):
+            class Meta:
+                model = Person
+                fields = '_all_'
+
+            notify = forms.BooleanField()
+
+            def process(self):
+                person = Person(
+                    first_name = self.cleaned_data['first_name'],
+                    last_name = self.cleaned_data['last_name'],
+                    email = self.cleaned_data['email']
+                )
+                person.save()
+
+                if self.cleaned_data['notify']:
+                    django.send_mail(
+                        'Account Created',
+                        'An account has been created for you'
+                        'System',
+                        [person.email]
+                    )
+
+
+        CreatePersonService.execute({
+            'first_name': 'John',
+            'last_name': 'Smith',
+            'notify': True
+        })
     """
     pass
