@@ -12,7 +12,7 @@ try:
     LONG_DESCRIPTION = pypandoc.convert(README_PATH, 'rst')
     LONG_DESCRIPTION_TYPE = 'text/x-rst; charset=UTF-8'
 except (IOError, ImportError):
-    LONG_DESCRIPTION_TYPE = 'text=markdown'
+    LONG_DESCRIPTION_TYPE = 'text/markdown'
     if os.path.isfile(README_PATH):
         with open(README_PATH) as f:
             LONG_DESCRIPTION = f.read()
