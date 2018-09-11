@@ -71,7 +71,7 @@ class Service(forms.Form):
         :param dictionary files: usually request's FILES dictionary or
             None.
 
-        :param dictionary kwargs: any additional parameters Service may
+        :param dictionary **kwargs: any additional parameters Service may
             need, can be an empty dictionary
         """
         instance = cls(inputs, files, **kwargs)
