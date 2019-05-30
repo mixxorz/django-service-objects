@@ -132,7 +132,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
     def changeform_view(self, request, object_id=None, form_url='',
                         extra_context=None):
         # Currently supported by Django>=1.11,>=2.0
-        if django.VERSION >= (2, 0) or django.VERSION >= (1, 11):
+        if django.VERSION >= (1, 11):
             with transaction.atomic(using=router.db_for_write(self.model)):
                 return self._changeform_view(
                    request, object_id, form_url, extra_context,
