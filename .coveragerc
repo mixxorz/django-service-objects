@@ -1,0 +1,9 @@
+[run]
+	branch = True
+	include =
+		*/service_objects/*
+
+[report]
+	show_missing = True
+	precision = 2
+	sort = Name
