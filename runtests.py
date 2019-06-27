@@ -8,6 +8,7 @@ settings.configure(
     DATABASES={
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'test.db' if django.VERSION >= (2, 2) else ''
         }
     },
     INSTALLED_APPS=('tests',)
