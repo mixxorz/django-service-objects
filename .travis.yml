@@ -10,7 +10,7 @@ env:
   - DJANGO=1.11
   - DJANGO=2.0
   - DJANGO=2.1
-  - DJANG0=2.2
+  - DJANGO=2.2
 matrix:
   exclude:
     # Python/Django combinations that aren't officially supported
