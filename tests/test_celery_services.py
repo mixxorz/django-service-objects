@@ -1,4 +1,5 @@
 import datetime
+
 try:
     from unittest.mock import Mock, patch
 except ImportError:
@@ -16,7 +17,7 @@ from tests.services import FooModelService
 class CeleryServiceTest(TestCase):
     def setUp(self):
         self.foo = CustomFooModel.objects.create(
-            custom_pk=f"custom-{id(self)}", one="custom"
+            custom_pk="custom-{}".format(id(self)), one="custom"
         )
         self.initial_data = {
             "foo": self.foo,
@@ -29,9 +30,11 @@ class CeleryServiceTest(TestCase):
         service.is_valid()
 
         # Check deflated ModelField format
+        defalted_models = self.initial_data.copy()
+        defalted_models["foo"] = (CustomFooModel, self.foo.pk)
+
         self.assertEqual(
-            CeleryService._deflate_models(service.cleaned_data),
-            {**self.initial_data, "foo": (CustomFooModel, self.foo.pk)},
+            CeleryService._deflate_models(service.cleaned_data), defalted_models
         )
 
         # Check deflate/inflate invariant
@@ -48,24 +51,22 @@ class CeleryServiceTest(TestCase):
 
     def test_form_data_reaching_executor(self):
 
-        celery_task_dispatched = False
-        cleaned_data = None
+        d = {"celery_task_dispatched": False, "cleaned_data": None}
 
         def apply_sync(*args, **kwargs):
-            nonlocal celery_task_dispatched
-            celery_task_dispatched = True
+            d["celery_task_dispatched"] = True
             return celery_service_task.apply(*args, **kwargs)
 
         def process(_self):
-            nonlocal cleaned_data
-            cleaned_data = _self.cleaned_data
+            d["cleaned_data"] = _self.cleaned_data
 
         with patch(
-            "service_objects.celery_services.celery_service_task.apply_async", apply_sync
+            "service_objects.celery_services.celery_service_task.apply_async",
+            apply_sync,
         ):
 
             with patch("tests.test_services.FooModelService.process", process):
 
                 FooModelService.execute(self.initial_data)
-                self.assertTrue(celery_task_dispatched)
-                self.assertEqual(cleaned_data, self.initial_data)
+                self.assertTrue(d["celery_task_dispatched"])
+                self.assertEqual(d["cleaned_data"], self.initial_data)

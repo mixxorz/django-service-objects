@@ -37,7 +37,7 @@ setup(
     maintainer='Mitchel Cabuloy',
     maintainer_email='mixxorz@gmail.com',
     install_requires=['Django>=1.8', 'six'],
-    extras_require = {'celery':  ['celery']},
+    extras_require={'celery':  ['celery']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Plugins',

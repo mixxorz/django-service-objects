@@ -88,5 +88,5 @@ class CeleryService(Service):
                 args=(cleaned_data,),
                 kwargs={"service_class": cls},
                 serializer="pickle",
-                **kwargs,
+                **kwargs
             )
