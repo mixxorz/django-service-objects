@@ -1,17 +1,21 @@
+import pickle
+import datetime
+
+import six
+from django import forms
+from django.test import TestCase
+
+from service_objects.errors import InvalidInputsError
+from service_objects.services import ModelService
+from tests.models import CustomFooModel, FooModel
+from tests.services import (FooService, MockService, NoDbTransactionService,
+                            FooModelService)
+
 try:
     from unittest.mock import Mock, patch
 except ImportError:
     from mock import Mock, patch
 
-from unittest import TestCase
-
-import six
-from django import forms
-
-from service_objects.errors import InvalidInputsError
-from service_objects.services import ModelService
-from tests.models import FooModel
-from tests.services import FooService, MockService, NoDbTransactionService
 
 MockService.process = Mock()
 NoDbTransactionService.process = Mock()

@@ -11,3 +11,10 @@ class BarModel(models.Model):
 
 class NonModel(object):
     pass
+
+
+class CustomFooModel(models.Model):
+    custom_pk = models.CharField(
+        max_length=100, primary_key=True
+    )
+    one = models.CharField(max_length=1)

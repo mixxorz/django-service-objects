@@ -24,7 +24,7 @@ class ServiceViewMixin(object):
 
     def get_service_kwargs(self):
         """
-        Returns a dictionary used as the \*\*kwarg parameter on
+        Returns a dictionary used as the **kwarg parameter on
         :class:`Service`.  By default, returns empty dictionary
         """
         return {}
