@@ -57,7 +57,7 @@ class Service(forms.Form):
     """
 
     db_transaction = True
-    has_on_commit_action = False
+    has_on_commit_action = True
     using = DEFAULT_DB_ALIAS
 
     @classmethod

@@ -38,17 +38,18 @@ A code sample is worth a thousand words.
             )
 
             # Create booking
-            booking = Booking.objects.create(
+            self.booking = Booking.objects.create(
                 customer=customer,
                 checkin_date=checkin_date,
                 checkout_date=checkout_date,
                 status=Booking.PENDING_VERIFICATION,
             )
 
-            # Send verification email (check out django-herald)
-            VerifyEmailNotification(booking).send()
+            return self.booking
 
-            return booking
+        def post_process(self):
+            # Send verification email (check out django-herald)
+            VerifyEmailNotification(self.booking).send()
 
 
 Database transactions
