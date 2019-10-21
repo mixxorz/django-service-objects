@@ -40,13 +40,14 @@ class CreateUser(Service):
     def process(self):
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
-        self.subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
+        subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
 
         self.user = User.objects.create_user(username=email, email=email, password=password)
+        self.subscribe_to_newsletter = subscribe_to_newsletter
 
         if self.subscribe_to_newsletter:
             newsletter = Newsletter.objects.get()
-            newsletter.subscribers.add(user)
+            newsletter.subscribers.add(self.user)
             newsletter.save()
             
         return self.user
@@ -54,7 +55,7 @@ class CreateUser(Service):
     def post_process(self):
         WelcomeEmail.send(self.user, is_subscribed=self.subsribe_to_newsletter)
         
-        # Calling a celery task after successfully execution.
+        # Calling a celery task after successfully creating the user.
         create_billing_account.delay(self.user.id)
 ```
 
