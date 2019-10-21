@@ -40,19 +40,22 @@ class CreateUser(Service):
     def process(self):
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
-        subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
+        self.subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
 
-        user = User.objects.create_user(
-            username=email, email=email, password=password)
+        self.user = User.objects.create_user(username=email, email=email, password=password)
 
-        if subscribe_to_newsletter:
+        if self.subscribe_to_newsletter:
             newsletter = Newsletter.objects.get()
             newsletter.subscribers.add(user)
             newsletter.save()
             
-        WelcomeEmail.send(user, is_subscribed=subsribe_to_newsletter)
-
-        return user
+        return self.user
+    
+    def post_process(self):
+        WelcomeEmail.send(self.user, is_subscribed=self.subsribe_to_newsletter)
+        
+        # Calling a celery task after successfully execution.
+        create_billing_account.delay(self.user.id)
 ```
 
 Notice that it's basically a Django form but with a `process` method. This method gets called when you call `execute()` on the process. If your inputs are invalid, it raises `InvalidInputsError`.

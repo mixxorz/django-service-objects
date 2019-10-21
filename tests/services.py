@@ -13,6 +13,14 @@ class MockService(Service):
     def process(self):
         pass
 
+class MockCommitActionService(Service):
+    has_on_commit_action = True
+
+    bar = forms.CharField(required=True)
+
+    def process(self):
+        pass
+
 
 class NoDbTransactionService(Service):
     db_transaction = False

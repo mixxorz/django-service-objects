@@ -11,7 +11,7 @@ from django import forms
 from service_objects.errors import InvalidInputsError
 from service_objects.services import ModelService
 from tests.models import FooModel
-from tests.services import FooService, MockService, NoDbTransactionService
+from tests.services import FooService, MockService, NoDbTransactionService, MockCommitActionService
 
 MockService.process = Mock()
 NoDbTransactionService.process = Mock()
@@ -50,6 +50,16 @@ class ServiceTest(TestCase):
 
         MockService.execute({'bar': 'Hello'})
         assert mock_transaction.atomic.return_value.__enter__.called
+
+    @patch('service_objects.services.transaction')
+    @patch('service_objects.services.Service.post_process')
+    def test_has_on_commit_action_flag(self, post_process, mock_transaction):
+        NoDbTransactionService.execute({})
+        assert not mock_transaction.atomic.return_value.__enter__.called
+
+        MockCommitActionService.execute({'bar': 'Hello'})
+        assert mock_transaction.atomic.return_value.__enter__.called
+        assert mock_transaction.on_commit.called_once_with(post_process)
 
 
 class ModelServiceTest(TestCase):
