@@ -14,6 +14,7 @@ from tests.models import FooModel
 from tests.services import FooService, MockService, NoDbTransactionService
 
 MockService.process = Mock()
+MockService.post_process = Mock()
 NoDbTransactionService.process = Mock()
 
 
@@ -52,14 +53,13 @@ class ServiceTest(TestCase):
         assert mock_transaction.atomic.return_value.__enter__.called
 
     @patch('service_objects.services.transaction')
-    @patch('service_objects.services.Service.post_process')
-    def test_has_on_commit_action_flag(self, post_process, mock_transaction):
+    def test_has_on_commit_action_flag(self, mock_transaction):
         NoDbTransactionService.execute({})
         assert not mock_transaction.atomic.return_value.__enter__.called
 
         MockService.execute({'bar': 'Hello'})
         assert mock_transaction.atomic.return_value.__enter__.called
-        assert mock_transaction.on_commit.called_once_with(post_process)
+        assert mock_transaction.on_commit.called_once_with(MockService.post_process)
 
 
 class ModelServiceTest(TestCase):
