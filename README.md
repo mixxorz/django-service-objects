@@ -61,6 +61,8 @@ class CreateUser(Service):
 
 Notice that it's basically a Django form but with a `process` method. This method gets called when you call `execute()` on the process. If your inputs are invalid, it raises `InvalidInputsError`.
 
+The newly added `post_process` can also be included for running extra tasks that need to be executed after the service completes.
+
 Here's how you use it:
 
 ```python
