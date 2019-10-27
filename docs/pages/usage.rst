@@ -10,6 +10,9 @@ Super easy. Just:
 1. Create a new class that inherits from :class:`Service`
 2. Add some fields, exactly like how you would with Django Forms
 3. Define a :func:`process` method that contains your business logic
+4. Optionally include a :func:`post_process` method to perform extra tasks
+   like running a celery task once the transaction is committed to the database.
+
 
 A code sample is worth a thousand words.
 
