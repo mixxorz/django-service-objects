@@ -42,20 +42,26 @@ class CreateUser(Service):
         password = self.cleaned_data['password']
         subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
 
-        user = User.objects.create_user(
-            username=email, email=email, password=password)
+        self.user = User.objects.create_user(username=email, email=email, password=password)
+        self.subscribe_to_newsletter = subscribe_to_newsletter
 
-        if subscribe_to_newsletter:
+        if self.subscribe_to_newsletter:
             newsletter = Newsletter.objects.get()
-            newsletter.subscribers.add(user)
+            newsletter.subscribers.add(self.user)
             newsletter.save()
             
-        WelcomeEmail.send(user, is_subscribed=subsribe_to_newsletter)
-
-        return user
+        return self.user
+    
+    def post_process(self):
+        WelcomeEmail.send(self.user, is_subscribed=self.subsribe_to_newsletter)
+        
+        # Calling a celery task after successfully creating the user.
+        create_billing_account.delay(self.user.id)
 ```
 
 Notice that it's basically a Django form but with a `process` method. This method gets called when you call `execute()` on the process. If your inputs are invalid, it raises `InvalidInputsError`.
+
+The newly added `post_process` can also be included for running extra tasks that need to be executed after the service completes.
 
 Here's how you use it:
 
