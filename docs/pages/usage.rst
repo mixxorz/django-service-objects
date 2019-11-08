@@ -10,6 +10,9 @@ Super easy. Just:
 1. Create a new class that inherits from :class:`Service`
 2. Add some fields, exactly like how you would with Django Forms
 3. Define a :func:`process` method that contains your business logic
+4. Optionally include a :func:`post_process` method to perform extra tasks
+   like running a celery task once the transaction is committed to the database.
+
 
 A code sample is worth a thousand words.
 
@@ -38,17 +41,18 @@ A code sample is worth a thousand words.
             )
 
             # Create booking
-            booking = Booking.objects.create(
+            self.booking = Booking.objects.create(
                 customer=customer,
                 checkin_date=checkin_date,
                 checkout_date=checkout_date,
                 status=Booking.PENDING_VERIFICATION,
             )
 
-            # Send verification email (check out django-herald)
-            VerifyEmailNotification(booking).send()
+            return self.booking
 
-            return booking
+        def post_process(self):
+            # Send verification email (check out django-herald)
+            VerifyEmailNotification(self.booking).send()
 
 
 Database transactions

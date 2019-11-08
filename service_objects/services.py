@@ -57,6 +57,7 @@ class Service(forms.Form):
     """
 
     db_transaction = True
+    has_on_commit_action = True
     using = DEFAULT_DB_ALIAS
 
     @classmethod
@@ -103,9 +104,18 @@ class Service(forms.Form):
         """
         if self.db_transaction:
             with transaction.atomic(using=self.using):
+                if self.has_on_commit_action:
+                    transaction.on_commit(self.post_process)
                 yield
         else:
             yield
+
+    def post_process(self):
+        """
+        Post process method to be perform extra actions after successfully
+        commits.
+        """
+        pass
 
 
 class ModelServiceMetaclass(ServiceMetaclass, ModelFormMetaclass):
