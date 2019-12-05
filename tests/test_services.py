@@ -53,9 +53,10 @@ class ServiceTest(TestCase):
         assert mock_transaction.atomic.return_value.__enter__.called
 
     @patch('service_objects.services.transaction')
-    def test_has_on_commit_action_flag(self, mock_transaction):
+    def test_has_post_process_action_flag(self, mock_transaction):
         NoDbTransactionService.execute({})
-        assert not mock_transaction.atomic.return_value.__enter__.called
+        assert mock_transaction.atomic.return_value.__enter__.called
+        assert mock_transaction.on_commit.called_once_with(MockService.post_process)
 
         MockService.execute({'bar': 'Hello'})
         assert mock_transaction.atomic.return_value.__enter__.called
