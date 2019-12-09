@@ -10,8 +10,13 @@ Super easy. Just:
 1. Create a new class that inherits from :class:`Service`
 2. Add some fields, exactly like how you would with Django Forms
 3. Define a :func:`process` method that contains your business logic
-4. Optionally include a :func:`post_process` method to perform extra tasks
-   like running a celery task once the transaction is committed to the database.
+4. Optionally include a :func:`post_process` method to perform extra tasks. If
+   using `db_transaction = True`, this will run after the `process` using a 
+   Django transaction on commit hook which will only run if the transaction 
+   is successfully committed. If using `db_transaction = False`, this will run 
+   after the `process` as long as there is no unhandled exceptions. The 
+   `post_process` is useful to running a task that should only be run if the 
+   process is successful (e.g. send an email, invoke a celery task, etc.).
 
 
 A code sample is worth a thousand words.
