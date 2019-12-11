@@ -150,7 +150,7 @@ class ModelField(forms.Field):
             )
 
     def check_unsaved(self, item):
-        if (self.allow_unsaved is False and item.id is None):
+        if (self.allow_unsaved is False and item.pk is None):
             raise ValidationError(self.error_unsaved)
 
 
