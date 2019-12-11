@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Features and Improvements**
+
+* Added support for Celery - adalekin
+* Post process method now called even without a transaction - peterfarrell
+
 ## 0.5.0 (2018-08-27)
 
 **Features and Improvements**
