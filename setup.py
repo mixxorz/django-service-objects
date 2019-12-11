@@ -36,7 +36,7 @@ setup(
     author_email='mixxorz@gmail.com',
     maintainer='Mitchel Cabuloy',
     maintainer_email='mixxorz@gmail.com',
-    install_requires=['Django>=1.8', 'six'],
+    install_requires=['Django>=1.11', 'six'],
     extras_require={'celery':  ['celery']},
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -54,6 +54,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
