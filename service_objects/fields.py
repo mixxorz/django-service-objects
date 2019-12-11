@@ -186,7 +186,7 @@ class MultipleModelField(ModelField):
             the database
 
     """
-    error_non_list = _("Object is not iterable.")
+    error_non_iterable = _("Object is not iterable.")
     error_required = _("Input is required expected list "
                        "of models but got %(values)r.")
 
@@ -199,8 +199,10 @@ class MultipleModelField(ModelField):
             else:
                 return values
 
-        if not isinstance(values, list):
-            raise ValidationError(self.error_non_list)
+        try:
+            _ = iter(values)
+        except TypeError:
+            raise ValidationError(self.error_non_iterable)
 
         for value in values:
             self.check_type(value)
