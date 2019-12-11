@@ -30,6 +30,8 @@ INSTALLED_APPS = (
 Let's say you want to register new users. You could make a `CreateUser` service.
 
 ```python
+from django import forms
+
 from service_objects.services import Service
 
 class CreateUser(Service):
