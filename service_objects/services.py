@@ -5,7 +5,7 @@ from django import forms
 from django.db import transaction, DEFAULT_DB_ALIAS
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.models import ModelFormMetaclass
-from django.utils import six
+import six
 
 from .errors import InvalidInputsError
 
