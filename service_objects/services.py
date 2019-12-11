@@ -57,7 +57,7 @@ class Service(forms.Form):
     """
 
     db_transaction = True
-    has_on_commit_action = True
+    run_post_process = True
     using = DEFAULT_DB_ALIAS
 
     @classmethod
@@ -104,11 +104,13 @@ class Service(forms.Form):
         """
         if self.db_transaction:
             with transaction.atomic(using=self.using):
-                if self.has_on_commit_action:
+                if self.run_post_process:
                     transaction.on_commit(self.post_process)
                 yield
         else:
             yield
+            if self.run_post_process:
+                self.post_process()
 
     def post_process(self):
         """
