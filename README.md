@@ -164,6 +164,6 @@ If you have any questions about service objects, you can tweet me [@mixxorz](htt
 [python-support-image]: https://img.shields.io/pypi/pyversions/django-service-objects.svg
 [python-support-link]: https://pypi.org/project/django-service-objects/
 [django-version-image]: https://img.shields.io/pypi/djversions/django_service_objects.svg
-[django-link]: https://docs.djangoproject.com/en/2.2/releases/
+[django-link]: https://docs.djangoproject.com/en/3.0/releases/
 [license-image]: https://img.shields.io/pypi/l/django-service-objects.svg
 [license-link]: https://github.com/mixxorz/django-service-objects/blob/master/LICENSE
