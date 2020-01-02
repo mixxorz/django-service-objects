@@ -150,7 +150,7 @@ class ModelField(forms.Field):
             )
 
     def check_unsaved(self, item):
-        if (self.allow_unsaved is False and item.id is None):
+        if (self.allow_unsaved is False and item.pk is None):
             raise ValidationError(self.error_unsaved)
 
 
@@ -186,7 +186,7 @@ class MultipleModelField(ModelField):
             the database
 
     """
-    error_non_list = _("Object is not iterable.")
+    error_non_iterable = _("Object is not iterable.")
     error_required = _("Input is required expected list "
                        "of models but got %(values)r.")
 
@@ -199,8 +199,10 @@ class MultipleModelField(ModelField):
             else:
                 return values
 
-        if not isinstance(values, list):
-            raise ValidationError(self.error_non_list)
+        try:
+            _ = iter(values)
+        except TypeError:
+            raise ValidationError(self.error_non_iterable)
 
         for value in values:
             self.check_type(value)
