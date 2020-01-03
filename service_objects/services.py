@@ -114,8 +114,8 @@ class Service(forms.Form):
 
     def post_process(self):
         """
-        Post process method to be perform extra actions after successfully
-        commits.
+        Post process method to be perform extra actions once :meth:`process`
+        successfully executes.
         """
         pass
 
