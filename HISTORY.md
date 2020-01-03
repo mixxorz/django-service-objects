@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.6.0 (2020-01-03)
+
 **Features and Improvements**
 
 * Added support for Celery - adalekin
