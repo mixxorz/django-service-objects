@@ -208,3 +208,37 @@ class MultipleModelField(ModelField):
             self.check_type(value)
             self.check_unsaved(value)
         return values
+
+
+class DictField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a dictionary:
+
+        class PDFGenerate(Service):
+            context = DictField()
+
+            process(self):
+                context = self.cleaned_data['context']
+
+        PDFGenerate.execute({
+            'context': {'a': 1, 'b': 2}
+        })
+
+
+    """
+    error_required = "Input is required. Expected dictionary but got %(value)r."
+    error_type = "Input needs to be of type dict."
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, dict):
+            raise ValidationError(self.error_type)
+
+        return value
