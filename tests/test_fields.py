@@ -203,7 +203,7 @@ class DictFieldTest(TestCase):
             dict_field.clean(None)
 
         self.assertEqual(
-            'Input is required. Expected dictionary but got None.', cm.exception.message)
+            'Input is required. Expected dict but got None.', cm.exception.message)
 
     def test_is_not_required(self):
         dict_field = DictField(required=False)
