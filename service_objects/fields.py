@@ -226,8 +226,8 @@ class DictField(forms.Field):
 
 
     """
-    error_required = "Input is required. Expected dictionary but got %(value)r."
-    error_type = "Input needs to be of type dict."
+    error_required = _("Input is required. Expected dict but got %(value)r.")
+    error_type = _("Input needs to be of type dict.")
 
     def clean(self, value):
         if not value and value is not False:
