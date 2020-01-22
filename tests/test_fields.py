@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from django.core.exceptions import ValidationError
 
-from service_objects.fields import MultipleFormField, ModelField, MultipleModelField, DictField
+from service_objects.fields import MultipleFormField, ModelField, MultipleModelField, \
+    DictField, ListField
 from tests.forms import FooForm
 from tests.models import FooModel, BarModel, NonModel
 
@@ -219,3 +220,29 @@ class DictFieldTest(TestCase):
 
         self.assertEqual(
             'Input needs to be of type dict.', cm.exception.message)
+
+
+class ListFieldTest(TestCase):
+    def test_is_required(self):
+        list_field = ListField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean(None)
+
+        self.assertEqual(
+            'Input is required. Expected list but got None.', cm.exception.message)
+
+    def test_is_not_required(self):
+        list_field = ListField(required=True)
+
+        # should not raise any exception
+        list_field.clean(None)
+
+    def test_invalid_type(self):
+        list_field = ListField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean('string test')
+
+        self.assertEqual(
+            'Input needs to be of type list.', cm.exception.message)

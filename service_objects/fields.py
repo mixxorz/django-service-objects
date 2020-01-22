@@ -242,3 +242,37 @@ class DictField(forms.Field):
             raise ValidationError(self.error_type)
 
         return value
+
+
+class ListField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a list:
+
+        class EmailWelcomeMessage(Service):
+            emails = ListField()
+
+            process(self):
+                emails = self.cleaned_data['emails']
+
+        EmailWelcomeMessage.execute({
+            'emails': ['blue@test.com', 'red@test.com']
+        })
+
+
+    """
+    error_required = _("Input is required. Expected list but got %(value)r.")
+    error_type = _("Input needs to be of type list.")
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, list):
+            raise ValidationError(self.error_type)
+
+        return value
