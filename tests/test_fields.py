@@ -233,7 +233,7 @@ class ListFieldTest(TestCase):
             'Input is required. Expected list but got None.', cm.exception.message)
 
     def test_is_not_required(self):
-        list_field = ListField(required=True)
+        list_field = ListField(required=False)
 
         # should not raise any exception
         list_field.clean(None)
