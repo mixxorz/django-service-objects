@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import TO_FIELD_VAR
 from django.contrib.admin.utils import unquote
-from django.core.exceptions import PermissionDenied, NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import (
+    PermissionDenied, NON_FIELD_ERRORS, ValidationError,
+)
 from django.forms import all_valid
 from six import viewitems
 
