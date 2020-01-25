@@ -8,9 +8,9 @@ from django.core.exceptions import ValidationError
 from django.db import transaction, router
 from django.forms import all_valid
 from django.utils.decorators import method_decorator
-from django.utils.six import viewitems
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import FormView, UpdateView, CreateView
+from six import viewitems
 
 from .errors import InvalidInputsError
 
