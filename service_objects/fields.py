@@ -34,6 +34,8 @@ class MultipleFormField(forms.Field):
     error_max = ungettext_lazy("There needs to be at most %(num)d item.",
                                "There needs to be at most %(num)d items.",
                                'num')
+    error_required = _("Input is required. "
+                       "Expected not empty list but got %(values)r.")
 
     def __init__(self, form_class, min_count=1, max_count=None, *args,
                  **kwargs):
@@ -44,6 +46,14 @@ class MultipleFormField(forms.Field):
         self.max_count = max_count
 
     def clean(self, values):
+        if not values and values is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'values': values
+                })
+            else:
+                return []
+
         if len(values) < self.min_count:
             raise ValidationError(self.error_min % {'num': self.min_count})
 
@@ -64,11 +74,34 @@ class MultipleFormField(forms.Field):
 class ModelField(forms.Field):
     """
     A field for :class:`Service` that accepts an object of the specified
-    :class:`Model`.
+    :class:`Model`::
 
-        :param model_class: Django :class:`Model` or dotted string of :
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+            last_updated = models.DateTimeField()
+
+
+        class UpdatePerson(Service):
+            person = ModelField(Person)
+
+            process(self):
+                person = self.cleaned_data['person']
+                person.last_updated = now()
+                person.save()
+
+
+        user = Person(first_name='John', last_name='Smith')
+        user.save()
+
+        UpdatePerson.execute({
+            'person': user
+        })
+
+
+    :param model_class: Django :class:`Model` or dotted string of :
             class:`Model` name
-        :param allow_unsaved: Whether the object is required to be saved to
+    :param allow_unsaved: Whether the object is required to be saved to
             the database
     """
     error_model_class = _("%(cls_name)s(%(model_class)r) is invalid.  First "
@@ -76,6 +109,7 @@ class ModelField(forms.Field):
                           "model name.")
     error_type = _("Objects needs to be of type %(model_class)r")
     error_unsaved = _("Unsaved objects are not allowed.")
+    error_required = _("Input is required. Expected model but got %(value)r.")
 
     def __init__(self, model_class, allow_unsaved=False, *args, **kwargs):
         super(ModelField, self).__init__(*args, **kwargs)
@@ -98,9 +132,14 @@ class ModelField(forms.Field):
         self.allow_unsaved = allow_unsaved
 
     def clean(self, value):
-        self.check_type(value)
-        self.check_unsaved(value)
-
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+        else:
+            self.check_type(value)
+            self.check_unsaved(value)
         return value
 
     def check_type(self, item):
@@ -111,28 +150,129 @@ class ModelField(forms.Field):
             )
 
     def check_unsaved(self, item):
-        if (self.allow_unsaved is False and item.id is None):
+        if (self.allow_unsaved is False and item.pk is None):
             raise ValidationError(self.error_unsaved)
 
 
 class MultipleModelField(ModelField):
     """
     A multiple model version of :class:`ModelField`, will check each passed
-    in object to match the specified :class:`Model`.
+    in object to match the specified :class:`Model`::
 
-        :param model_class: Django :class:`Model` or dotted string of :
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+
+
+        class AssociatePeople(Service):
+            people = MultipleModelField(Person, allow_unsaved=True)
+
+
+        users = [
+            Person(first_name='John', last_name='Smith'),
+            Person(first_name='Jane', last_name='Smith')
+        ]
+
+        AssociatePeople.execute({
+            'people': users
+        })
+
+        for user in users:
+            user.save()
+
+    :param model_class: Django :class:`Model` or dotted string of :
             class:`Model` name
-        :param allow_unsaved: Whether the object is required to be saved to
+    :param allow_unsaved: Whether the object is required to be saved to
             the database
 
     """
-    error_non_list = _("Object is not iterable")
+    error_non_iterable = _("Object is not iterable.")
+    error_required = _("Input is required expected list "
+                       "of models but got %(values)r.")
 
     def clean(self, values):
-        if not isinstance(values, list):
-            raise ValidationError(self.error_non_list)
+        if not values and values is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'values': values
+                })
+            else:
+                return values
+
+        try:
+            _ = iter(values)
+        except TypeError:
+            raise ValidationError(self.error_non_iterable)
 
         for value in values:
             self.check_type(value)
             self.check_unsaved(value)
         return values
+
+
+class DictField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a dictionary:
+
+        class PDFGenerate(Service):
+            context = DictField()
+
+            process(self):
+                context = self.cleaned_data['context']
+
+        PDFGenerate.execute({
+            'context': {'a': 1, 'b': 2}
+        })
+
+
+    """
+    error_required = _("Input is required. Expected dict but got %(value)r.")
+    error_type = _("Input needs to be of type dict.")
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, dict):
+            raise ValidationError(self.error_type)
+
+        return value
+
+
+class ListField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a list:
+
+        class EmailWelcomeMessage(Service):
+            emails = ListField()
+
+            process(self):
+                emails = self.cleaned_data['emails']
+
+        EmailWelcomeMessage.execute({
+            'emails': ['blue@test.com', 'red@test.com']
+        })
+
+
+    """
+    error_required = _("Input is required. Expected list but got %(value)r.")
+    error_type = _("Input needs to be of type list.")
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, list):
+            raise ValidationError(self.error_type)
+
+        return value

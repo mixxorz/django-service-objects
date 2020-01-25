@@ -1,5 +1,8 @@
 # django-service-objects [![Latest Version][latest-version-image]][latest-version-link]
-[![Build Status][build-status-image]][build-status-link] [![Python Support][python-support-image]][python-support-link] [![License][license-image]][license-link]
+[![Build Status][build-status-image]][build-status-link] 
+[![Python Support][python-support-image]][python-support-link]
+[![PyPI - Django Version][django-version-image]][django-link]
+[![License][license-image]][license-link]
 
 Service objects for Django
 
@@ -30,6 +33,8 @@ INSTALLED_APPS = (
 Let's say you want to register new users. You could make a `CreateUser` service.
 
 ```python
+from django import forms
+
 from service_objects.services import Service
 
 class CreateUser(Service):
@@ -42,20 +47,26 @@ class CreateUser(Service):
         password = self.cleaned_data['password']
         subscribe_to_newsletter = self.cleaned_data['subscribe_to_newsletter']
 
-        user = User.objects.create_user(
-            username=email, email=email, password=password)
+        self.user = User.objects.create_user(username=email, email=email, password=password)
+        self.subscribe_to_newsletter = subscribe_to_newsletter
 
-        if subscribe_to_newsletter:
+        if self.subscribe_to_newsletter:
             newsletter = Newsletter.objects.get()
-            newsletter.subscribers.add(user)
+            newsletter.subscribers.add(self.user)
             newsletter.save()
             
-        WelcomeEmail.send(user, is_subscribed=subsribe_to_newsletter)
-
-        return user
+        return self.user
+    
+    def post_process(self):
+        WelcomeEmail.send(self.user, is_subscribed=self.subsribe_to_newsletter)
+        
+        # Calling a celery task after successfully creating the user.
+        create_billing_account.delay(self.user.id)
 ```
 
 Notice that it's basically a Django form but with a `process` method. This method gets called when you call `execute()` on the process. If your inputs are invalid, it raises `InvalidInputsError`.
+
+The newly added `post_process` can also be included for running extra tasks that need to be executed after the service completes.
 
 Here's how you use it:
 
@@ -152,5 +163,7 @@ If you have any questions about service objects, you can tweet me [@mixxorz](htt
 [build-status-link]: https://travis-ci.org/mixxorz/django-service-objects
 [python-support-image]: https://img.shields.io/pypi/pyversions/django-service-objects.svg
 [python-support-link]: https://pypi.org/project/django-service-objects/
+[django-version-image]: https://img.shields.io/pypi/djversions/django_service_objects.svg
+[django-link]: https://docs.djangoproject.com/en/3.0/releases/
 [license-image]: https://img.shields.io/pypi/l/django-service-objects.svg
 [license-link]: https://github.com/mixxorz/django-service-objects/blob/master/LICENSE

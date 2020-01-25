@@ -1,5 +1,27 @@
 # Release History
 
+## Unreleased
+
+**Features and Improvements**
+
+* Added support for DictField - peterfarrell
+* Added support for ListField - peterfarrell
+
+## 0.6.0 (2020-01-03)
+
+**Features and Improvements**
+
+* Added support for Celery - adalekin
+* Post process method now called even without a transaction - peterfarrell
+
+## 0.5.0 (2018-08-27)
+
+**Features and Improvements**
+
+* Added ability to defined which database `Service` uses - jackton1
+* Changed `Service` into a bona fide Abstract Base Class - jackton1
+* Added `CreateServiceView` and `UpdateServiceView` - jackton1
+
 ## 0.4.0 (2018-03-30)
 
 **Features and Improvements**

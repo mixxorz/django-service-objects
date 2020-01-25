@@ -16,7 +16,6 @@ from .errors import InvalidInputsError
 
 
 class ServiceViewMixin(object):
-
     service_class = None
 
     def get_form_class(self):
@@ -34,7 +33,7 @@ class ServiceViewMixin(object):
 
     def get_service_kwargs(self):
         """
-        Returns a dictionary used as the \*\*kwarg parameter on
+        Returns a dictionary used as the ``**kwarg`` parameter on
         :class:`Service`.  By default, returns empty dictionary
         """
         return {}
@@ -87,8 +86,23 @@ class ServiceView(ServiceViewMixin, FormView):
     """
     Based on Django's :class:`FormView`, designed to call a
     :class:`Service` class if the Form is valid.  If :attr:`form_class` is
-    ``None``, ServiceViewMixin will use :attr:`service_class` for the Form to
-    present the UI to the User.
+    ``None``, ServiceView will use :attr:`service_class` for the Form to
+    present the UI to the User::
+
+        from django.core.urlresolvers import reverse_lazy
+
+        from service_objects.views import ServiceView
+
+        from .forms import BookingForm
+        from .services import CreateBookingService
+
+
+        class CreateBookingView(ServiceView):
+            form_class = BookingForm
+            service_class = CreateBookingService
+            template_name = 'booking/create_booking.html'
+            success_url = reverse_lazy('booking:success')
+
     """
 
 

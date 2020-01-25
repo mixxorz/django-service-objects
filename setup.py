@@ -12,7 +12,7 @@ try:
     LONG_DESCRIPTION = pypandoc.convert(README_PATH, 'rst')
     LONG_DESCRIPTION_TYPE = 'text/x-rst; charset=UTF-8'
 except (IOError, ImportError):
-    LONG_DESCRIPTION_TYPE = 'text=markdown'
+    LONG_DESCRIPTION_TYPE = 'text/markdown'
     if os.path.isfile(README_PATH):
         with open(README_PATH) as f:
             LONG_DESCRIPTION = f.read()
@@ -36,12 +36,12 @@ setup(
     author_email='mixxorz@gmail.com',
     maintainer='Mitchel Cabuloy',
     maintainer_email='mixxorz@gmail.com',
-    install_requires=['Django>=1.8', 'six'],
+    install_requires=['Django>=1.11', 'six'],
+    extras_require={'celery':  ['celery']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Plugins',
         'Environment :: Web Environment',
-        'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
@@ -49,9 +49,15 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
