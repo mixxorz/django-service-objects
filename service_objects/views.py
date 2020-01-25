@@ -161,7 +161,9 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 raise PermissionDenied
 
             if obj is None:
-                return self._get_obj_does_not_exist_redirect(request, opts, object_id)
+                return self._get_obj_does_not_exist_redirect(
+                    request, opts, object_id,
+                )
 
         ModelForm = self.get_form(request, obj)
 
@@ -176,7 +178,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 service_ret_form = cls.execute(
                     self.get_service_input(form),
                     files=self.get_service_files(request),
-                    **self.get_service_kwargs(),
+                    **self.get_service_kwargs()
                 )
             except InvalidInputsError as e:
                 for k, v in viewitems(e.errors):
