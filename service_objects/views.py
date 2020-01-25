@@ -1,14 +1,10 @@
-import django
 from django.contrib import admin
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import TO_FIELD_VAR
 from django.contrib.admin.utils import unquote
 from django.core.exceptions import PermissionDenied, NON_FIELD_ERRORS
 from django.core.exceptions import ValidationError
-from django.db import transaction, router
 from django.forms import all_valid
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
 from django.views.generic import FormView, UpdateView, CreateView
 from six import viewitems
 
@@ -134,29 +130,6 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
         if request and request.method in ('POST', 'PUT'):
             return request.FILES
 
-    def get_service_kwargs(self):
-        """
-        Returns a dictionary used as the `**kwarg` parameter
-        on :class:`Service`.
-        By default, returns a dictionary with commit=False
-        """
-        return {'commit': False}
-
-    @method_decorator(csrf_protect)
-    def changeform_view(self, request, object_id=None, form_url='',
-                        extra_context=None):
-        # Currently supported by Django>=1.11,>=2.0
-        if django.VERSION >= (1, 11):
-            with transaction.atomic(using=router.db_for_write(self.model)):
-                return self._changeform_view(
-                   request, object_id, form_url, extra_context,
-                )
-        return (
-            super(ModelAdminServiceView, self).changeform_view(
-                request, object_id=None, form_url='', extra_context=None,
-            )
-        )
-
     def _changeform_view(self, request, object_id, form_url, extra_context):
         if request.method != 'POST':
             return super(ModelAdminServiceView, self)._changeform_view(
@@ -166,7 +139,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
         to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
         if to_field and not self.to_field_allowed(request, to_field):
             raise DisallowedModelAdminToField(
-                "The field %s cannot be referenced." % to_field
+                "The field %s cannot be referenced." % to_field,
             )
 
         model = self.model
@@ -188,9 +161,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 raise PermissionDenied
 
             if obj is None:
-                return self._get_obj_does_not_exist_redirect(
-                    request, opts, object_id
-                )
+                return self._get_obj_does_not_exist_redirect(request, opts, object_id)
 
         ModelForm = self.get_form(request, obj)
 
@@ -203,9 +174,9 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
             try:
                 cls = self.get_service_class()
                 service_ret_form = cls.execute(
-                    data=self.get_service_input(form),
+                    self.get_service_input(form),
                     files=self.get_service_files(request),
-                    **self.get_service_kwargs()
+                    **self.get_service_kwargs(),
                 )
             except InvalidInputsError as e:
                 for k, v in viewitems(e.errors):
