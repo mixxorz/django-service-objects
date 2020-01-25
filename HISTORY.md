@@ -4,6 +4,13 @@
 
 **Features and Improvements**
 
+* Added support for DictField - peterfarrell
+* Added support for ListField - peterfarrell
+
+## 0.6.0 (2020-01-03)
+
+**Features and Improvements**
+
 * Added support for Celery - adalekin
 * Post process method now called even without a transaction - peterfarrell
 

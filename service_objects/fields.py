@@ -208,3 +208,71 @@ class MultipleModelField(ModelField):
             self.check_type(value)
             self.check_unsaved(value)
         return values
+
+
+class DictField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a dictionary:
+
+        class PDFGenerate(Service):
+            context = DictField()
+
+            process(self):
+                context = self.cleaned_data['context']
+
+        PDFGenerate.execute({
+            'context': {'a': 1, 'b': 2}
+        })
+
+
+    """
+    error_required = _("Input is required. Expected dict but got %(value)r.")
+    error_type = _("Input needs to be of type dict.")
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, dict):
+            raise ValidationError(self.error_type)
+
+        return value
+
+
+class ListField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a list:
+
+        class EmailWelcomeMessage(Service):
+            emails = ListField()
+
+            process(self):
+                emails = self.cleaned_data['emails']
+
+        EmailWelcomeMessage.execute({
+            'emails': ['blue@test.com', 'red@test.com']
+        })
+
+
+    """
+    error_required = _("Input is required. Expected list but got %(value)r.")
+    error_type = _("Input needs to be of type list.")
+
+    def clean(self, value):
+        if not value and value is not False:
+            if self.required:
+                raise ValidationError(self.error_required % {
+                    'value': value
+                })
+            else:
+                return {}
+
+        if not isinstance(value, list):
+            raise ValidationError(self.error_type)
+
+        return value

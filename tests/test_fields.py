@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from django.core.exceptions import ValidationError
 
-from service_objects.fields import MultipleFormField, ModelField, MultipleModelField
+from service_objects.fields import MultipleFormField, ModelField, MultipleModelField, \
+    DictField, ListField
 from tests.forms import FooForm
 from tests.models import FooModel, BarModel, NonModel
 
@@ -181,7 +182,7 @@ class MultipleModelFieldTest(TestCase):
 
         self.assertEqual(objects, cleaned_data)
 
-    def test_is_requred(self):
+    def test_is_required(self):
         f = MultipleModelField(FooModel)
         with self.assertRaises(ValidationError) as cm:
             f.clean(None)
@@ -189,7 +190,59 @@ class MultipleModelFieldTest(TestCase):
         self.assertEqual(
             'Input is required expected list of models but got None.', cm.exception.message)
 
-    def test_is_not_requred(self):
+    def test_is_not_required(self):
         f = MultipleModelField(FooModel, required=False)
         # should not raise any exception
         f.clean(None)
+
+
+class DictFieldTest(TestCase):
+    def test_is_required(self):
+        dict_field = DictField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            dict_field.clean(None)
+
+        self.assertEqual(
+            'Input is required. Expected dict but got None.', cm.exception.message)
+
+    def test_is_not_required(self):
+        dict_field = DictField(required=False)
+
+        # should not raise any exception
+        dict_field.clean(None)
+
+    def test_invalid_type(self):
+        dict_field = DictField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            dict_field.clean('string test')
+
+        self.assertEqual(
+            'Input needs to be of type dict.', cm.exception.message)
+
+
+class ListFieldTest(TestCase):
+    def test_is_required(self):
+        list_field = ListField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean(None)
+
+        self.assertEqual(
+            'Input is required. Expected list but got None.', cm.exception.message)
+
+    def test_is_not_required(self):
+        list_field = ListField(required=False)
+
+        # should not raise any exception
+        list_field.clean(None)
+
+    def test_invalid_type(self):
+        list_field = ListField(required=True)
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean('string test')
+
+        self.assertEqual(
+            'Input needs to be of type list.', cm.exception.message)
