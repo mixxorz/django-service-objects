@@ -20,7 +20,7 @@ class CeleryService(Service):
         Transforms model instances into picklable tuple.
         """
         if isinstance(value, models.Model):
-            return (value.__class__, value.pk)
+            return value.__class__, value.pk
         return value
 
     @staticmethod

@@ -30,11 +30,11 @@ class CeleryServiceTest(TestCase):
         service.is_valid()
 
         # Check deflated ModelField format
-        defalted_models = self.initial_data.copy()
-        defalted_models["foo"] = (CustomFooModel, self.foo.pk)
+        deflated_models = self.initial_data.copy()
+        deflated_models["foo"] = (CustomFooModel, self.foo.pk)
 
         self.assertEqual(
-            CeleryService._deflate_models(service.cleaned_data), defalted_models
+            CeleryService._deflate_models(service.cleaned_data), deflated_models
         )
 
         # Check deflate/inflate invariant
