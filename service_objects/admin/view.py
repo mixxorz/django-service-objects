@@ -12,11 +12,8 @@ from service_objects.errors import InvalidInputsError
 from service_objects.views import ServiceViewMixin
 
 
-class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
-    """
-    Based on Django's :class:`django.contrib.admin.ModelAdmin` calls the
-    :class:`Service` if the form is valid.
-    """
+class AdminServiceViewMixin(ServiceViewMixin):
+    """Mixin to use service classes from the admin view."""
 
     def get_service_files(self, request=None):
         """
@@ -26,17 +23,21 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
         if request and request.method in ('POST', 'PUT'):
             return request.FILES
 
+    def get_service_kwargs(self, form=None):
+        kwargs = {}
+        if form and hasattr(form, 'instance'):
+            kwargs['instance'] = form.instance
+        return kwargs
+
     def _changeform_view(self, request, object_id, form_url, extra_context):
         if request.method != 'POST':
-            return super(ModelAdminServiceView, self)._changeform_view(
+            return super(AdminServiceViewMixin, self)._changeform_view(
                 request, object_id, form_url, extra_context,
             )
 
         to_field = request.POST.get(TO_FIELD_VAR, request.GET.get(TO_FIELD_VAR))
         if to_field and not self.to_field_allowed(request, to_field):
-            raise DisallowedModelAdminToField(
-                "The field %s cannot be referenced." % to_field,
-            )
+            raise DisallowedModelAdminToField("The field %s cannot be referenced." % to_field)
 
         model = self.model
         opts = model._meta
@@ -57,9 +58,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 raise PermissionDenied
 
             if obj is None:
-                return self._get_obj_does_not_exist_redirect(
-                    request, opts, object_id,
-                )
+                return self._get_obj_does_not_exist_redirect(request, opts, object_id)
 
         ModelForm = self.get_form(request, obj)
 
@@ -74,7 +73,7 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 service_ret_form = cls.execute(
                     self.get_service_input(form),
                     files=self.get_service_files(request),
-                    **self.get_service_kwargs()
+                    **self.get_service_kwargs(form),
                 )
             except InvalidInputsError as e:
                 for k, v in viewitems(e.errors):
@@ -90,15 +89,11 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
         else:
             form_validated = False
             new_object = form.instance
-        formsets, inline_instances = self._create_formsets(
-            request, new_object, change=not add,
-        )
+        formsets, inline_instances = self._create_formsets(request, new_object, change=not add)
         if all_valid(formsets) and form_validated:
             self.save_model(request, new_object, form, not add)
             self.save_related(request, form, formsets, not add)
-            change_message = self.construct_change_message(
-                request, form, formsets, add,
-            )
+            change_message = self.construct_change_message(request, form, formsets, add)
             if add:
                 self.log_addition(request, new_object, change_message)
                 return self.response_add(request, new_object)
@@ -107,7 +102,12 @@ class ModelAdminServiceView(ServiceViewMixin, admin.ModelAdmin):
                 return self.response_change(request, new_object)
 
         return (
-            super(ModelAdminServiceView, self)._changeform_view(
-                request, object_id, form_url, extra_context,
-            )
+            super(AdminServiceViewMixin, self)._changeform_view(request, object_id, form_url, extra_context)
         )
+
+
+class ModelAdminServiceView(AdminServiceViewMixin, admin.ModelAdmin):
+    """
+    Based on Django's :class:`django.contrib.admin.ModelAdmin` calls the
+    :class:`Service` if the form is valid.
+    """
