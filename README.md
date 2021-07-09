@@ -1,5 +1,5 @@
 # django-service-objects [![Latest Version][latest-version-image]][latest-version-link]
-[![Build Status][build-status-image]][build-status-link] 
+[![Build Status][build-status-image]][build-status-link]
 [![Python Support][python-support-image]][python-support-link]
 [![PyPI - Django Version][django-version-image]][django-link]
 [![License][license-image]][license-link]
@@ -159,8 +159,8 @@ If you have any questions about service objects, you can tweet me [@mixxorz](htt
 
 [latest-version-image]: https://img.shields.io/pypi/v/django-service-objects.svg
 [latest-version-link]: https://pypi.org/project/django-service-objects/
-[build-status-image]: https://img.shields.io/travis/mixxorz/django-service-objects/master.svg
-[build-status-link]: https://travis-ci.org/mixxorz/django-service-objects
+[build-status-image]: https://github.com/mixxorz/django-service-objects/workflows/Test/badge.svg
+[build-status-link]: https://github.com/mixxorz/django-service-objects/actions
 [python-support-image]: https://img.shields.io/pypi/pyversions/django-service-objects.svg
 [python-support-link]: https://pypi.org/project/django-service-objects/
 [django-version-image]: https://img.shields.io/pypi/djversions/django_service_objects.svg
