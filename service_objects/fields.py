@@ -1,7 +1,7 @@
 from django import forms
 from django.apps import apps
 from django.core.exceptions import ValidationError
-from django.utils.translation import ungettext_lazy, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class MultipleFormField(forms.Field):
@@ -28,10 +28,10 @@ class MultipleFormField(forms.Field):
             ]
         })
     """
-    error_min = ungettext_lazy("There needs to be at least %(num)d item.",
+    error_min = _("There needs to be at least %(num)d item.",
                                "There needs to be at least %(num)d items.",
                                'num')
-    error_max = ungettext_lazy("There needs to be at most %(num)d item.",
+    error_max = _("There needs to be at most %(num)d item.",
                                "There needs to be at most %(num)d items.",
                                'num')
     error_required = _("Input is required. "
