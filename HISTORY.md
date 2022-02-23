@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.7.1 (2022-02-23)
+
+**Features and Improvements**
+
+* Skip missing python versions when running tox - jackton1
+* Add russian translate - ivanscm
+* Change CI to Github Actions - AngelOnFira
+* Fix ungettext_lazy for Django 4.0 - mnemchinov
+* Update CI version matrix - AngelOnFira
+
 ## 0.7.0 (2020-04-23)
 
 **Features and Improvements**
