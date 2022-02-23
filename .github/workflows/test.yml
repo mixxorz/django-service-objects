@@ -18,7 +18,7 @@ jobs:
         exclude:
           # Django 4.0 doesn't support Python 3.7
           - python-version: 3.7
-            django-versio: 4.0
+            django-version: 4.0
           # Django 2.2 doesn't support Python 3.10
           - python-version: 3.10
             django-version: 2.2
