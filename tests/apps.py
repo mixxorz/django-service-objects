@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class TestsConfig(AppConfig):
-    name = 'Tests'
+    name = 'tests'
     label = 'tests'
