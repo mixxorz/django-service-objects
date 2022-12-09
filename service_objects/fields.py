@@ -241,7 +241,7 @@ class DictField(forms.Field):
         if not isinstance(value, dict):
             raise ValidationError(self.error_type)
 
-        return value
+        return super().clean(value)
 
 
 class ListField(forms.Field):
@@ -275,4 +275,4 @@ class ListField(forms.Field):
         if not isinstance(value, list):
             raise ValidationError(self.error_type)
 
-        return value
+        return super().clean(value)

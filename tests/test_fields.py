@@ -221,6 +221,18 @@ class DictFieldTest(TestCase):
         self.assertEqual(
             'Input needs to be of type dict.', cm.exception.message)
 
+    def test_validators(self):
+        def has_foo_key(my_dict):
+            if "foo" not in my_dict:
+                raise ValidationError("dict must have `foo` key")
+
+        list_field = DictField(validators=[has_foo_key])
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean({"bar": "baz"})
+
+        self.assertEqual(["dict must have `foo` key"], cm.exception.messages)
+
 
 class ListFieldTest(TestCase):
     def test_is_required(self):
@@ -246,3 +258,16 @@ class ListFieldTest(TestCase):
 
         self.assertEqual(
             'Input needs to be of type list.', cm.exception.message)
+
+    def test_validators(self):
+        def starts_with_a(values):
+            for value in values:
+                if not value.startswith("a"):
+                    raise ValidationError(f"'{value}' must start with a")
+
+        list_field = ListField(validators=[starts_with_a])
+
+        with self.assertRaises(ValidationError) as cm:
+            list_field.clean(['a valid string', 'invalid string'])
+
+        self.assertEqual(["'invalid string' must start with a"], cm.exception.messages)
