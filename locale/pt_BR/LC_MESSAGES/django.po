@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-17 00:57-0300\n"
+"POT-Creation-Date: 2022-12-19 10:30-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Breno Uchôa <brenouchoa@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,90 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: service_objects/fields.py:10
+#: service_objects/fields.py:32
 #, python-format
 msgid "There needs to be at least %(num)d item."
 msgid_plural "There needs to be at least %(num)d items."
 msgstr[0] "É necessário pelo menos %(num)d item."
 msgstr[1] "São necessários pelo menos %(num)d itens."
 
-#: service_objects/fields.py:13
+#: service_objects/fields.py:35
 #, python-format
 msgid "There needs to be at most %(num)d item."
 msgid_plural "There needs to be at most %(num)d items."
 msgstr[0] "Só pode conter %(num)d item."
 msgstr[1] "Só pode conter %(num)d itens."
+
+#: service_objects/fields.py:38
+#, python-format
+msgid "Input is required. Expected not empty list but got %(values)r."
+msgstr ""
+
+#: service_objects/fields.py:108
+#, python-format
+msgid ""
+"%(cls_name)s(%(model_class)r) is invalid.  First parameter of ModelField "
+"must be either a model or a model name."
+msgstr ""
+"%(cls_name)s(%(model_class)r) is invalid.  First parameter of ModelField "
+"must be either a model or a model name."
+
+#: service_objects/fields.py:111
+#, python-format
+msgid "Objects needs to be of type %(model_class)r"
+msgstr "Objects needs to be of type %(model_class)r"
+
+#: service_objects/fields.py:112
+msgid "Unsaved objects are not allowed."
+msgstr "Unsaved objects are not allowed."
+
+#: service_objects/fields.py:113
+#, python-format
+msgid "Input is required. Expected model but got %(value)r."
+msgstr "Input is required. Expected model but got %(value)r."
+
+#: service_objects/fields.py:190
+msgid "Object is not iterable."
+msgstr "Object is not iterable."
+
+#: service_objects/fields.py:191
+#, python-format
+msgid "Input is required expected list of models but got %(values)r."
+msgstr "Input is required expected list of models but got %(values)r."
+
+#: service_objects/fields.py:235
+#, python-format
+msgid ""
+"%(cls_name)s(%(model_class)r) is invalid.  First parameter of QuerysetField "
+"must be either a model or a model name."
+msgstr ""
+"%(cls_name)s(%(model_class)r) is invalid.  First parameter of QuerysetField "
+"must be either a model or a model name."
+
+#: service_objects/fields.py:238
+#, python-format
+msgid "Input is required. Expected queryset but got %(value)r."
+msgstr "Input is required. Expected queryset but got %(value)r."
+
+#: service_objects/fields.py:240
+#, python-format
+msgid "Input is required expected queryset of models but got %(values)r."
+msgstr "Input is required expected queryset of models but got %(values)r."
+
+#: service_objects/fields.py:299
+#, python-format
+msgid "Input is required. Expected dict but got %(value)r."
+msgstr "Input is required. Expected dict but got %(value)r."
+
+#: service_objects/fields.py:300
+msgid "Input needs to be of type dict."
+msgstr "Input needs to be of type dict."
+
+#: service_objects/fields.py:333
+#, python-format
+msgid "Input is required. Expected list but got %(value)r."
+msgstr "Input is required. Expected list but got %(value)r."
+
+#: service_objects/fields.py:334
+msgid "Input needs to be of type list."
+msgstr "Input needs to be of type list."

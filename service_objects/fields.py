@@ -1,6 +1,7 @@
 from django import forms
 from django.apps import apps
 from django.core.exceptions import ValidationError
+from django.db.models.query import QuerySet
 from django.utils.translation import ngettext_lazy, gettext_lazy as _
 
 
@@ -207,6 +208,75 @@ class MultipleModelField(ModelField):
         for value in values:
             self.check_type(value)
             self.check_unsaved(value)
+        return values
+
+
+class QuerysetField(forms.Field):
+    """
+    A field for :class:`Service` that accepts a queryset of the specified
+    :class:`Model`::
+
+        class Person(models.Model):
+            first_name = models.CharField(max_length=30)
+            last_name = models.CharField(max_length=30)
+
+
+        class AssociatePeople(Service):
+            people = QuerysetField(Person)
+
+        AssociatePeople.execute({
+            'people': Users.objects.all()
+        })
+
+    :param model_class: Django :class:`Model` or dotted string of :
+            class:`Model` name that matches the incoming queryset
+
+    """
+    error_model_class = _("%(cls_name)s(%(model_class)r) is invalid.  First "
+                          "parameter of QuerysetField must be either a model "
+                          "or a model name.")
+    error_required = _("Input is required. Expected queryset but got "
+                       "%(value)r.")
+    error_type = _("Input is required expected queryset "
+                   "of models but got %(values)r.")
+
+    def __init__(self, model_class, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        try:
+            model_class._meta.model_name
+        except AttributeError:
+            assert isinstance(model_class, str), self.error_model_class % {
+                'cls_name': self.__class__.__name__,
+                'model_class': model_class
+            }
+
+        self.model_class = model_class
+        if isinstance(model_class, str):
+            label = model_class.split('.')
+            app_label = ".".join(label[:-1])
+            model_name = label[-1]
+            self.model_class = apps.get_model(app_label, model_name)
+
+    def clean(self, values):
+        if self.required:
+            # Check for queryset and queryset type
+            if not isinstance(values, QuerySet):
+                raise ValidationError(self.error_required %
+                                      {'value': type(values)})
+
+            # Check for queryset and queryset type
+            if values.model != self.model_class:
+                raise ValidationError(self.error_model_class % {
+                    'cls_name': self.__class__.__name__,
+                    'model_class': self.model_class
+                })
+
+            if self.required and not values.count():
+                raise ValidationError(self.error_required % {
+                    'value': type(values)
+                })
+
         return values
 
 

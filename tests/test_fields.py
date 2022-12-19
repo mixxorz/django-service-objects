@@ -3,7 +3,7 @@ from unittest import TestCase
 from django.core.exceptions import ValidationError
 
 from service_objects.fields import MultipleFormField, ModelField, MultipleModelField, \
-    DictField, ListField
+    DictField, ListField, QuerysetField
 from tests.forms import FooForm
 from tests.models import FooModel, BarModel, NonModel
 
@@ -189,6 +189,47 @@ class MultipleModelFieldTest(TestCase):
 
         self.assertEqual(
             'Input is required expected list of models but got None.', cm.exception.message)
+
+    def test_is_not_required(self):
+        f = MultipleModelField(FooModel, required=False)
+        # should not raise any exception
+        f.clean(None)
+
+
+class QuerysetFieldTest(TestCase):
+
+    def test_multiple_invalid_type(self):
+        model_field = QuerysetField(FooModel)
+        queryset = [
+            'A',
+            'B',
+            'C'
+        ]
+
+        with self.assertRaisesRegexp(ValidationError, "<class '.*'>"):
+            model_field.clean(queryset)
+
+    def test_multiple_incorrect_queryset_type(self):
+        model_field = QuerysetField(FooModel)
+        queryset = BarModel.objects.all()
+
+        with self.assertRaisesRegexp(ValidationError, "FooModel"):
+            model_field.clean(queryset)
+
+    def test_is_required(self):
+        # Add one object
+        FooModel.objects.create(one='A')
+
+        f = QuerysetField(FooModel, required=True)
+        with self.assertRaises(ValidationError) as cm:
+            f.clean(FooModel.objects.none())
+
+        self.assertEqual(
+            "Input is required. Expected queryset but got <class 'django.db.models.query.QuerySet'>.", cm.exception.message)
+
+        values = f.clean(FooModel.objects.all())
+
+        self.assertTrue(values.count() == 1, 'Expecting queryset with 1 item in it.')
 
     def test_is_not_required(self):
         f = MultipleModelField(FooModel, required=False)

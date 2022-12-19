@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-03-20 20:35+0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-19 10:33-0800\n"
 "PO-Revision-Date: 2021-03-20 21:05+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -15,14 +16,30 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: service_objects/fields.py:37
+#: service_objects/fields.py:32
+#, python-format
+msgid "There needs to be at least %(num)d item."
+msgid_plural "There needs to be at least %(num)d items."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: service_objects/fields.py:35
+#, python-format
+msgid "There needs to be at most %(num)d item."
+msgid_plural "There needs to be at most %(num)d items."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: service_objects/fields.py:38
 #, python-format
 msgid "Input is required. Expected not empty list but got %(values)r."
 msgstr ""
 "Входной параметр обязателен. Ожидается непустой список, но получено "
 "%(values)r."
 
-#: service_objects/fields.py:107
+#: service_objects/fields.py:108
 #, python-format
 msgid ""
 "%(cls_name)s(%(model_class)r) is invalid.  First parameter of ModelField "
@@ -31,48 +48,71 @@ msgstr ""
 "%(cls_name)s(%(model_class)r) некорректно.  Первый параметр ModelField "
 "должен быть моделью или именем модели."
 
-#: service_objects/fields.py:110
+#: service_objects/fields.py:111
 #, python-format
 msgid "Objects needs to be of type %(model_class)r"
 msgstr "Объекты должны быть типа %(model_class)r"
 
-#: service_objects/fields.py:111
+#: service_objects/fields.py:112
 msgid "Unsaved objects are not allowed."
 msgstr "Несохраненные объекты не разрешены."
 
-#: service_objects/fields.py:112
+#: service_objects/fields.py:113
 #, python-format
 msgid "Input is required. Expected model but got %(value)r."
-msgstr ""
-"Входной параметр обязателен. Ожидается модель, но получено %(value)r."
+msgstr "Входной параметр обязателен. Ожидается модель, но получено %(value)r."
 
-#: service_objects/fields.py:189
+#: service_objects/fields.py:190
 msgid "Object is not iterable."
 msgstr "Объект не является итерируемым."
 
-#: service_objects/fields.py:190
+#: service_objects/fields.py:191
 #, python-format
 msgid "Input is required expected list of models but got %(values)r."
 msgstr ""
 "Входной параметр обязателен и ожидается список моделей, но получено "
 "%(values)r."
 
-#: service_objects/fields.py:229
+#: service_objects/fields.py:235
+#, fuzzy, python-format
+#| msgid ""
+#| "%(cls_name)s(%(model_class)r) is invalid.  First parameter of ModelField "
+#| "must be either a model or a model name."
+msgid ""
+"%(cls_name)s(%(model_class)r) is invalid.  First parameter of QuerysetField "
+"must be either a model or a model name."
+msgstr ""
+"%(cls_name)s(%(model_class)r) некорректно.  Первый параметр ModelField "
+"должен быть моделью или именем модели."
+
+#: service_objects/fields.py:238
+#, fuzzy, python-format
+#| msgid "Input is required. Expected list but got %(value)r."
+msgid "Input is required. Expected queryset but got %(value)r."
+msgstr "Входной параметр обязателен. Ожидается список, но получено %(value)r."
+
+#: service_objects/fields.py:240
+#, fuzzy, python-format
+#| msgid "Input is required expected list of models but got %(values)r."
+msgid "Input is required expected queryset of models but got %(values)r."
+msgstr ""
+"Входной параметр обязателен и ожидается список моделей, но получено "
+"%(values)r."
+
+#: service_objects/fields.py:299
 #, python-format
 msgid "Input is required. Expected dict but got %(value)r."
-msgstr ""
-"Входной параметр обязателен. Ожидается словарь, но получено %(value)r."
+msgstr "Входной параметр обязателен. Ожидается словарь, но получено %(value)r."
 
-#: service_objects/fields.py:230
+#: service_objects/fields.py:300
 msgid "Input needs to be of type dict."
 msgstr "Входной параметр должен быть типа словарь."
 
-#: service_objects/fields.py:263
+#: service_objects/fields.py:333
 #, python-format
 msgid "Input is required. Expected list but got %(value)r."
-msgstr ""
-"Входной параметр обязателен. Ожидается список, но получено %(value)r."
+msgstr "Входной параметр обязателен. Ожидается список, но получено %(value)r."
 
-#: service_objects/fields.py:264
+#: service_objects/fields.py:334
 msgid "Input needs to be of type list."
 msgstr "Входной параметр должен быть типа список."
