@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Features and Improvements**
+
+* Added support for QuerysetField - peterfarrell
+
 ## 0.7.1 (2022-02-23)
 
 **Features and Improvements**
