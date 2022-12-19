@@ -11,7 +11,8 @@ settings.configure(
             'NAME': ':memory:'
         }
     },
-    INSTALLED_APPS=('tests',)
+    INSTALLED_APPS=('tests',),
+    DEFAULT_AUTO_FIELD='django.db.models.AutoField',
 )
 django.setup()
 

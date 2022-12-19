@@ -19,5 +19,4 @@ settings.configure(
 
 django.setup()
 
-management.call_command('makemessages', "--locale=pt_BR", verbosity=0,
-                        interactive=False)
+management.call_command('makemessages', "--locale=pt_BR", "--locale=ru_RU", "--ignore=venv/*", verbosity=0)
